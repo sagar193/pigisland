@@ -1,0 +1,14 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\pigisland",
+    "\\pigisland\\include",
+    "\\pigisland\\include\\kmint",
+    "\\pigisland\\include\\kmint\\pigisland",
+    "\\pigisland\\src",
+    "\\pigisland\\src\\kmint",
+    "\\pigisland\\src\\kmint\\pigisland"
+  ],
+  "SelectedNode": "\\pigisland\\src\\kmint\\pigisland\\main.cpp",
+  "PreviewInSolutionExplorer": false
+}
