@@ -4,6 +4,8 @@
 #include "kmint/random.hpp"
 #include <cmath>
 
+#include "kmint/pigisland/SteeringBehaviors.hpp"
+
 namespace kmint {
 namespace pigisland {
 
@@ -17,11 +19,20 @@ math::vector2d random_vector() {
 } // namespace
 
 pig::pig(math::vector2d location)
-	: free_roaming_actor{ random_vector() }, drawable_{ *this, pig_image() } {}
+	: free_roaming_actor{ random_vector()/*location*/ }, drawable_{ *this, pig_image() }, steeringBehavior{ SteeringBehaviors() } {}
       
 
 void pig::act(delta_time dt) {
   free_roaming_actor::act(dt);
+  math::vector2d steeringForce = steeringBehavior.CalculateForces();
+  auto acceleration = steeringForce / mass;
+  dt.count();
+  velocity += acceleration * dt.count();
+  auto velocityLength = std::sqrt(velocity.x() * velocity.x() + (velocity.y() * velocity.y()));
+  if (velocityLength > 0 && velocityLength > maxSpeed) {
+	  velocity /= velocityLength *= maxSpeed;
+  }
+  move(velocity);
 }
 } // namespace pigisland
 
