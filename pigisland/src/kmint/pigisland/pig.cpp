@@ -19,7 +19,7 @@ math::vector2d random_vector() {
 } // namespace
 
 pig::pig(math::vector2d location)
-	: free_roaming_actor{ random_vector()/*location*/ }, drawable_{ *this, pig_image() }, steeringBehavior{ SteeringBehaviors() } {}
+	: free_roaming_actor{ random_vector()/*location*/ }, drawable_{ *this, pig_image() }, steeringBehavior{ SteeringBehaviors(*this) } {}
       
 
 void pig::act(delta_time dt) {

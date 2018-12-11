@@ -19,6 +19,7 @@ public:
 
 private:
   play::image_drawable drawable_;
+
   SteeringBehaviors& steeringBehavior;
   //MovingActor* movingActor;
 
