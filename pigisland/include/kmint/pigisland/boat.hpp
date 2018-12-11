@@ -4,7 +4,7 @@
 #include "kmint/map/map.hpp"
 #include "kmint/play.hpp"
 #include "kmint/primitives.hpp"
-#include "states/State.hpp"
+#include "states/state.hpp"
 #include <map>
 
 namespace kmint {
@@ -27,8 +27,8 @@ private:
   //[[maybe_unused]] map::map_graph *map_;
   delta_time t_since_move_{};
 
-  State* currentState;
-  std::map<STATE_NAMES, std::unique_ptr<State>> States;
+  state* currentState;
+  std::map<STATE_NAMES, std::unique_ptr<state>> States;
   std::vector<const kmint::map::map_node*> path;
 
   void RegisterStates();
