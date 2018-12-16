@@ -25,7 +25,10 @@ public:
   void act(delta_time dt) override;
   bool perceptive() const override { return true; };
   scalar range_of_perception() const override { return 100.0f; };
-  kmint::map::map_graph *_g;
+  kmint::map::map_graph *_g() { return map_; };
+  const kmint::map::map_node* get_resting_place() { return resting_place_; };
+  const int get_energy() { return _energy; };
+  int setEnergy(int energy) { _energy = energy; };
 
   void setState(STATE_NAMES state);
 private:
@@ -33,6 +36,7 @@ private:
   map::map_graph *map_;
   map::map_node const *resting_place_;
   delta_time t_since_move_{};
+  int _energy;
 
   state* currentState;
   std::map<STATE_NAMES, std::unique_ptr<state>> States;

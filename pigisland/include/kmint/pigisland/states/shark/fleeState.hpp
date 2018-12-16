@@ -13,6 +13,7 @@ public:
 	fleeState() = default;
 private:
 	kmint::pigisland::shark& _shark;
+	int _fleeCounter;
 };
 }
 }

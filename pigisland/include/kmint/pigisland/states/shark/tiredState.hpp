@@ -1,5 +1,6 @@
 #pragma once
 #include "../state.hpp"
+#include "../../aStar.hpp"
 
 namespace kmint {
 namespace pigisland {
@@ -13,5 +14,8 @@ public:
 	tiredState() = default;
 private:
 	shark& _shark;
+	aStar _aStar;
+	const kmint::map::map_node &find_shark_node(const kmint::map::map_graph &graph);
+
 };
 }}

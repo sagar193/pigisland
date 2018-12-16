@@ -12,8 +12,7 @@ namespace pigisland {
 
 	shark::shark(kmint::map::map_graph &g)
 		: play::map_bound_actor{ g, find_shark_resting_place(g) },
-		drawable_{ *this, shark_image() }, map_{ &g }, resting_place_(&node()),
-		_g(&g)
+		drawable_{ *this, shark_image() }, map_{ &g }, resting_place_(&node())
 {
 	RegisterStates();
 	setState(WANDER_STATE);
@@ -22,7 +21,13 @@ namespace pigisland {
 void shark::act(delta_time dt) {
   t_since_move_ += dt;
   if (to_seconds(t_since_move_) >= waiting_time(node())) {
-    currentState->act();
+	  if (_energy == 0) {
+		  setState(STATE_NAMES::TIRED_STATE);
+	  }
+	  else {
+		  _energy--;
+		  currentState->act();
+	  }
     t_since_move_ = from_seconds(0);
   }
 }
