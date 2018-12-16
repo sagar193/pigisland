@@ -13,7 +13,6 @@ public:
 	fleeState() = default;
 private:
 	kmint::pigisland::shark& _shark;
-	kmint::delta_time t_passed_{};
 };
 }
 }

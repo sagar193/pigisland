@@ -22,6 +22,7 @@ add_executable(pigisland
   src/kmint/pigisland/states/shark/huntState.cpp
   src/kmint/pigisland/states/shark/tiredState.cpp
   src/kmint/pigisland/states/shark/wanderState.cpp
+  src/kmint/pigisland/aStar.cpp
   )
 
 target_compile_features(pigisland PUBLIC cxx_std_17)

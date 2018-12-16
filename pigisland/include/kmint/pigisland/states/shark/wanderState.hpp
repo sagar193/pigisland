@@ -13,7 +13,6 @@ public:
 	wanderState() = default;
 private:
 	shark& _shark;
-	kmint::delta_time t_passed_{};
 };
 }
 }

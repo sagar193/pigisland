@@ -25,6 +25,7 @@ public:
   void act(delta_time dt) override;
   bool perceptive() const override { return true; };
   scalar range_of_perception() const override { return 100.0f; };
+  kmint::map::map_graph *_g;
 
   void setState(STATE_NAMES state);
 private:

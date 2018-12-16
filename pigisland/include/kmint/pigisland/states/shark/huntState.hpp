@@ -1,9 +1,12 @@
 #pragma once
 #include "../state.hpp"
+#include "../../aStar.hpp"
+
 
 namespace kmint {
 namespace pigisland {
 class shark;
+class pig;
 class huntState : public state
 {
 public:
@@ -13,6 +16,9 @@ public:
 	huntState() = default;
 private:
 	shark& _shark;
-	kmint::delta_time t_passed_{};
+	aStar _aStar;
+	std::vector<const kmint::map::map_node*> path;
+
+	double calculateDistance(kmint::pigisland::pig* pig);
 };
 }}
