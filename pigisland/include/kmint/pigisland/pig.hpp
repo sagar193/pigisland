@@ -17,20 +17,30 @@ public:
   bool perceptive() const override { return true; }
   scalar range_of_perception() const override { return 30.0f; }
 
+  double getMass() const { return mass; }
+  double getMaxSpeed() const { return maxSpeed; }
+  double getMaxForce() const { return maxForce; }
+  double getmaxTurnRate() const { return maxTurnRate; }
+  double getWanderRadius() const { return wanderRadius; }
+  double getWanderDistance() const { return wanderDistance; }
+  double getWanderJitter() const { return wanderJitter; }
+
 private:
   play::image_drawable drawable_;
 
-  SteeringBehaviors& steeringBehavior;
+  SteeringBehaviors* steeringBehavior;
   //MovingActor* movingActor;
 
   kmint::math::vector2d velocity;
-  kmint::math::vector2d heading;
-  kmint::math::vector2d side;
+  //kmint::math::vector2d heading;
+  //kmint::math::vector2d side;
   double mass = 50;
-  double maxSpeed = 1;
-  double maxForce;
-  double maxTurnRate;
-
+  double maxSpeed = 2;
+  double maxForce = 11;
+  double maxTurnRate = 1;
+  double wanderRadius = 10.0;
+  double wanderDistance = 10.0;
+  double wanderJitter = 10.0;
 };
 
 } // namespace pigisland

@@ -5,6 +5,7 @@
 #include <cmath>
 
 #include "kmint/pigisland/SteeringBehaviors.hpp"
+#include <iostream>
 
 namespace kmint {
 namespace pigisland {
@@ -19,20 +20,28 @@ math::vector2d random_vector() {
 } // namespace
 
 pig::pig(math::vector2d location)
-	: free_roaming_actor{ random_vector()/*location*/ }, drawable_{ *this, pig_image() }, steeringBehavior{ SteeringBehaviors(*this) } {}
+	: free_roaming_actor{ random_vector()/*location*/ }, drawable_{ *this, pig_image() }/*, steeringBehavior{ kmint::pigisland::SteeringBehaviors(*this) }*/ {
+}
       
 
 void pig::act(delta_time dt) {
   free_roaming_actor::act(dt);
-  math::vector2d steeringForce = steeringBehavior.CalculateForces();
+  math::vector2d steeringForce = steeringBehavior->CalculateForces(*this);
   auto acceleration = steeringForce / mass;
   dt.count();
   velocity += acceleration * dt.count();
-  auto velocityLength = std::sqrt(velocity.x() * velocity.x() + (velocity.y() * velocity.y()));
-  if (velocityLength > 0 && velocityLength > maxSpeed) {
-	  velocity /= velocityLength *= maxSpeed;
+  auto x = velocity.x();
+  auto y = velocity.y();
+  auto velocityLength = (x*x) + (y*y);
+  if (velocityLength > 0 && velocityLength > maxSpeed*maxSpeed) {
+	  velocity /= std::sqrt(velocityLength);
+	  velocity *= maxSpeed;
   }
+
+  std::cout << velocity<<std::endl;
   move(velocity);
+  
+
 }
 } // namespace pigisland
 

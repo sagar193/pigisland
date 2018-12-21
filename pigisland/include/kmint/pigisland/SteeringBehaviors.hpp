@@ -8,15 +8,24 @@ namespace kmint {
 	namespace pigisland {
 		class SteeringBehaviors {
 		public:
-			SteeringBehaviors(kmint::pigisland::pig &pig);
+			SteeringBehaviors();
 			void getNeighbours();
-			kmint::math::vector2d CalculateForces();
-			kmint::math::vector2d CalculateSeperationForces();
-			kmint::math::vector2d CalculateAlignmentForces();
-			kmint::math::vector2d CalculateCohesionForces();
+			kmint::math::vector2d CalculateForces(kmint::pigisland::pig &pig) const;
+			
+			kmint::math::vector2d CalculateWanderForces(kmint::pigisland::pig &pig) const;
+			
+			kmint::math::vector2d CalculateSeekForces(const play::free_roaming_actor& target);
+
+			kmint::math::vector2d CalculateSeperationForces(kmint::pigisland::pig &pig);
+			kmint::math::vector2d CalculateAlignmentForces(kmint::pigisland::pig &pig);
+			kmint::math::vector2d CalculateCohesionForces(kmint::pigisland::pig &pig);
+			
 		private:
-			kmint::pigisland::pig &pig;
-			std::vector<kmint::pigisland::pig> neighbours;
+
+			
+			
+
+			//std::vector<kmint::pigisland::pig> neighbours;
 		};
 	}
 }

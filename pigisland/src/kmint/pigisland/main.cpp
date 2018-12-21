@@ -22,7 +22,7 @@ int main() {
   s.build_actor<play::background>(math::size(1024, 768),
                                   graphics::image{map.background_image()});
   s.build_actor<play::map_actor>(math::vector2d{0.f, 0.f}, map.graph());
-  for (int i = 0; i < 100; ++i) {
+  for (int i = 0; i < 1; ++i) {
     s.build_actor<pigisland::pig>(math::vector2d(i * 10.0f, i * 6.0f));
 	
   }
