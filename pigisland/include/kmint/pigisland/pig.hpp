@@ -32,10 +32,10 @@ private:
   //MovingActor* movingActor;
 
   kmint::math::vector2d velocity;
-  //kmint::math::vector2d heading;
+  kmint::math::vector2d heading = kmint::math::vector2d(0,0);
   //kmint::math::vector2d side;
   double mass = 50;
-  double maxSpeed = 2;
+  double maxSpeed = .5;
   double maxForce = 11;
   double maxTurnRate = 1;
   double wanderRadius = 10.0;

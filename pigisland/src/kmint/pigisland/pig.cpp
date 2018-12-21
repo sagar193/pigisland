@@ -26,22 +26,27 @@ pig::pig(math::vector2d location)
 
 void pig::act(delta_time dt) {
   free_roaming_actor::act(dt);
-  math::vector2d steeringForce = steeringBehavior->CalculateForces(*this);
-  auto acceleration = steeringForce / mass;
-  dt.count();
-  velocity += acceleration * dt.count();
-  auto x = velocity.x();
-  auto y = velocity.y();
-  auto velocityLength = (x*x) + (y*y);
-  if (velocityLength > 0 && velocityLength > maxSpeed*maxSpeed) {
-	  velocity /= std::sqrt(velocityLength);
-	  velocity *= maxSpeed;
+  
+  //Calculate forces
+  const auto& steering_force = steeringBehavior->CalculateForces(*this);
+  const auto& acceleration = steering_force / mass;
+
+  //Add new acceleration to velocity
+  velocity += acceleration * to_seconds(dt);
+
+  //Set to max speed
+  heading += velocity;
+	
+  const auto& velocity_length = (heading.x()*heading.x()) + (heading.y()*heading.y());
+  if (velocity_length > 0 && velocity_length > maxSpeed*maxSpeed) {
+	  heading /= std::sqrt(velocity_length);
+	  heading *= maxSpeed;
   }
 
-  std::cout << velocity<<std::endl;
-  move(velocity);
-  
+  //heading += velocity;
 
+  move(heading);
+  
 }
 } // namespace pigisland
 
