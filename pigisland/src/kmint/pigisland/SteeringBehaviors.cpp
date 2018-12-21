@@ -34,17 +34,17 @@ namespace kmint {
 			auto randX = (((double)rand() / (RAND_MAX))) * 2 - 1;
 			auto randY = (((double)rand() / (RAND_MAX))) * 2 - 1;
 			
-			auto j = pig.getWanderJitter();
-			auto x = randX * j;
-			auto y = randY * j;
+			//auto j = pig.getWanderJitter();
+			auto x = randX;//* j;
+			auto y = randY; //* j;
 
 			auto wanderVector = math::vector2d(x, y);
 			auto wanderLength = wanderVector.x()*wanderVector.x() + wanderVector.y()*wanderVector.y();
-			if (wanderLength > 0) {
+			if (wanderLength > pig.getWanderJitter()) {
 				wanderVector /= std::sqrt(wanderLength);
 				wanderVector *= pig.getWanderRadius();
 			}
-			return wanderVector;
+			return wanderVector+(pig.getHeading()*pig.getWanderDistance());
 		}
 
 

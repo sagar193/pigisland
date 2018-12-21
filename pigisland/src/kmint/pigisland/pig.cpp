@@ -34,19 +34,29 @@ void pig::act(delta_time dt) {
   //Add new acceleration to velocity
   velocity += acceleration * to_seconds(dt);
 
+  const auto& velocity_length = (velocity.x()*velocity.x()) + (velocity.y()*velocity.y());
+  if (velocity_length > 0) {
+	  const auto newHeading = velocity/ std::sqrt(velocity_length);
+	  heading = newHeading;
+	  if (velocity_length > maxSpeed*maxSpeed) {
+		  velocity = newHeading * maxSpeed;
+	  }
+  }
+  std::cout << velocity.x() << "    " << velocity.y() << std::endl;
+  
+  
+  move(velocity);
+
   //Set to max speed
-  heading += velocity;
-	
+  /*heading += velocity;
+
   const auto& velocity_length = (heading.x()*heading.x()) + (heading.y()*heading.y());
   if (velocity_length > 0 && velocity_length > maxSpeed*maxSpeed) {
 	  heading /= std::sqrt(velocity_length);
 	  heading *= maxSpeed;
-  }
+  }*/
+  //std::cout << heading.x() << "    " << heading.y() << std::endl;
 
-  //heading += velocity;
-
-  move(heading);
-  
 }
 } // namespace pigisland
 

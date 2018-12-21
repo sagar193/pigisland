@@ -20,27 +20,27 @@ public:
   double getMass() const { return mass; }
   double getMaxSpeed() const { return maxSpeed; }
   double getMaxForce() const { return maxForce; }
-  double getmaxTurnRate() const { return maxTurnRate; }
+  double getMaxTurnRate() const { return maxTurnRate; }
   double getWanderRadius() const { return wanderRadius; }
   double getWanderDistance() const { return wanderDistance; }
   double getWanderJitter() const { return wanderJitter; }
-
+  kmint::math::vector2d getHeading() const { return heading; }
 private:
   play::image_drawable drawable_;
 
   SteeringBehaviors* steeringBehavior;
   //MovingActor* movingActor;
 
-  kmint::math::vector2d velocity;
+  kmint::math::vector2d velocity = kmint::math::vector2d(0, 0);
   kmint::math::vector2d heading = kmint::math::vector2d(0,0);
-  //kmint::math::vector2d side;
+  
   double mass = 50;
   double maxSpeed = .5;
-  double maxForce = 11;
+  double maxForce = 1;
   double maxTurnRate = 1;
-  double wanderRadius = 10.0;
-  double wanderDistance = 10.0;
-  double wanderJitter = 10.0;
+  double wanderRadius = 100;
+  double wanderDistance = 10;
+  double wanderJitter = 01.;
 };
 
 } // namespace pigisland
