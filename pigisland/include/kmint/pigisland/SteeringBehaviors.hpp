@@ -16,9 +16,9 @@ namespace kmint {
 			
 			kmint::math::vector2d CalculateSeekForces(const play::free_roaming_actor& target);
 
-			kmint::math::vector2d CalculateSeperationForces(kmint::pigisland::pig &pig);
-			kmint::math::vector2d CalculateAlignmentForces(kmint::pigisland::pig &pig);
-			kmint::math::vector2d CalculateCohesionForces(kmint::pigisland::pig &pig);
+			kmint::math::vector2d CalculateSeperationForces(kmint::pigisland::pig &pig) const ;
+			kmint::math::vector2d CalculateAlignmentForces(kmint::pigisland::pig &pig) const ;
+			kmint::math::vector2d CalculateCohesionForces(kmint::pigisland::pig &pig) const ;
 			
 		private:
 

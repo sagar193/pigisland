@@ -10,11 +10,32 @@ namespace kmint {
 		kmint::math::vector2d SteeringBehaviors::CalculateForces(kmint::pigisland::pig &pig) const
 		{
 			//return kmint::math::vector2d(.00000001f, .00000001f);
-			return CalculateWanderForces(pig);
+			auto& wander = CalculateWanderForces(pig);
+			auto& cohession = CalculateCohesionForces(pig);
+			auto& seperation = CalculateSeperationForces(pig);
+			auto& totalForce = wander + cohession + seperation;
+			return totalForce;
 		}
 		
-		kmint::math::vector2d SteeringBehaviors::CalculateSeperationForces(kmint::pigisland::pig &pig)
+		kmint::math::vector2d SteeringBehaviors::CalculateSeperationForces(kmint::pigisland::pig &pig) const
 		{
+
+			auto & midpoint = kmint::math::vector2d(0, 0);
+			auto& neigbours = pig.getNeighbours();
+			if (neigbours.size() > 0) {
+				for (const auto& location : neigbours) {
+					midpoint += location;
+				}
+				midpoint /= neigbours.size();
+			}
+
+			auto& midpointDistance = pig.location() - midpoint;
+			return midpointDistance * pig.getSeperationForce();
+
+
+
+
+			/*
 			for (auto i = pig.begin_perceived(); i != pig.end_perceived(); ++i) {
 				kmint::play::actor *ptr = &(*i);
 				if (auto p = dynamic_cast<kmint::pigisland::pig*>(ptr); p) {
@@ -22,7 +43,7 @@ namespace kmint {
 					//	<< p->location().y() << "\n";
 				}
 			}
-			return math::vector2d(0,0);
+			return math::vector2d(0,0);*/
 		}
 		/*
 		kmint::math::vector2d SteeringBehaviors::CalculateSeekForces(const play::free_roaming_actor& target) {
@@ -34,43 +55,36 @@ namespace kmint {
 			auto randX = (((double)rand() / (RAND_MAX))) * 2 - 1;
 			auto randY = (((double)rand() / (RAND_MAX))) * 2 - 1;
 			
-			//auto j = pig.getWanderJitter();
-			auto x = randX;//* j;
-			auto y = randY; //* j;
-
-			auto wanderVector = math::vector2d(x, y);
+			auto wanderVector = math::vector2d(randX, randY);
 			auto wanderLength = wanderVector.x()*wanderVector.x() + wanderVector.y()*wanderVector.y();
 			if (wanderLength > pig.getWanderJitter()) {
 				wanderVector /= std::sqrt(wanderLength);
 				wanderVector *= pig.getWanderRadius();
 			}
-			return wanderVector+(pig.getHeading()*pig.getWanderDistance());
+			auto& distance = (pig.getHeading()*pig.getWanderDistance());
+			return wanderVector+distance;
 		}
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-		/*
-		kmint::math::vector2d SteeringBehaviors::CalculateAlignmentForces()
+		kmint::math::vector2d SteeringBehaviors::CalculateAlignmentForces(kmint::pigisland::pig &pig) const
 		{
 			return kmint::math::vector2d(.00000001f, .00000001f);
 		}
 
-		kmint::math::vector2d SteeringBehaviors::CalculateCohesionForces()
+		kmint::math::vector2d SteeringBehaviors::CalculateCohesionForces(kmint::pigisland::pig &pig) const 
 		{
-			return kmint::math::vector2d(.00000001f, .00000001f);
-		}*/
+			auto & midpoint = kmint::math::vector2d(0,0);
+			auto& neigbours = pig.getNeighbours();
+			if (neigbours.size() > 0) {
+				for (const auto& location : neigbours) {
+					midpoint += location;
+				}
+				//midpoint /= neigbours.size();
+			}
+
+			auto& midpointDistance = midpoint - pig.location();
+			return midpointDistance*pig.getCohessionForce();
+		}
+
 	}
 }

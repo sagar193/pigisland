@@ -6,6 +6,7 @@
 
 #include "kmint/pigisland/SteeringBehaviors.hpp"
 #include <iostream>
+#include <vector>
 
 namespace kmint {
 namespace pigisland {
@@ -46,18 +47,33 @@ void pig::act(delta_time dt) {
   
   
   move(velocity);
-
-  //Set to max speed
-  /*heading += velocity;
-
-  const auto& velocity_length = (heading.x()*heading.x()) + (heading.y()*heading.y());
-  if (velocity_length > 0 && velocity_length > maxSpeed*maxSpeed) {
-	  heading /= std::sqrt(velocity_length);
-	  heading *= maxSpeed;
-  }*/
-  //std::cout << heading.x() << "    " << heading.y() << std::endl;
-
 }
+
+std::vector<kmint::math::vector2d> pig::getNeighbours() {
+	std::vector<kmint::math::vector2d> neighbours;
+	for (auto i = begin_perceived(); i != end_perceived(); ++i) {
+		kmint::play::actor *ptr = &(*i);
+		if (auto p = dynamic_cast<kmint::pigisland::pig*>(ptr); p) {
+			//std::cout << "saw something at " << p->location().x() << ", "
+			//	<< p->location().y() << "\n";
+			auto& distance = this->location() - p->location();
+
+			auto length = distance.x() * distance.x() + distance.y()*distance.y();
+			if (length <= range_of_perception() * range_of_perception()) {
+				neighbours.push_back(p->location());
+			}
+		}
+	}
+	return neighbours;
+}
+
+
+
+
+
+
+
+
 } // namespace pigisland
 
 } // namespace kmint
