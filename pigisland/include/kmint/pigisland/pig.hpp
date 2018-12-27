@@ -18,25 +18,29 @@ public:
   bool perceptive() const override { return true; }
   scalar range_of_perception() const override { return 30.0f; }
 
-  std::vector<kmint::math::vector2d> getNeighbours(double neighbourDistance);
+  std::vector<pig*> getNeighbours(double neighbourDistance);
 
   double getMass() const { return mass; }
   double getMaxSpeed() const { return maxSpeed; }
   double getMaxForce() const { return maxForce; }
   double getMaxTurnRate() const { return maxTurnRate; }
+
   double getWanderRadius() const { return wanderRadius; }
   double getWanderDistance() const { return wanderDistance; }
   double getWanderJitter() const { return wanderJitter; }
+  double getWanderForce() const { return wanderForce; }
+
   double getCohessionForce() const { return cohessionForce; }
   double getSeperationForce() const { return seperationForce; }
+
+  double getAlignmentForce() const { return alignmentForce; }
+
   double getSeperationDistance() const { return seperationDistance; }
   kmint::math::vector2d getHeading() const { return heading; }
 private:
   play::image_drawable drawable_;
 
   SteeringBehaviors* steeringBehavior;
-  //MovingActor* movingActor;
-
   kmint::math::vector2d velocity = kmint::math::vector2d(0, 0);
   kmint::math::vector2d heading = kmint::math::vector2d(0,0);
   
@@ -44,12 +48,16 @@ private:
   double maxSpeed = 1;
   double maxForce = 1;
   double maxTurnRate = 1;
-  double wanderRadius = 10.0;
-  double wanderDistance = 15;//2.5;
-  double wanderJitter = 10;
-  double cohessionForce = 1;
-  double seperationForce = 3;
-  double seperationDistance = 20;
+  
+  double wanderRadius = 20;
+  double wanderDistance = 15;
+  double wanderJitter = 1;
+
+  double alignmentForce = 0;
+  double wanderForce = 11;
+  double cohessionForce = 0;
+  double seperationForce = 0;
+  double seperationDistance = 30;
 };
 
 } // namespace pigisland

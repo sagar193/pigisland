@@ -13,79 +13,81 @@ namespace kmint {
 			auto& wander = CalculateWanderForces(pig);
 			auto& cohession = CalculateCohesionForces(pig);
 			auto& seperation = CalculateSeperationForces(pig);
-			auto& totalForce = wander + cohession + seperation;
+			auto& alignment = CalculateAlignmentForces(pig);
+			auto& totalForce = wander + cohession + seperation + alignment;
 			return totalForce;
 		}
 		
 		kmint::math::vector2d SteeringBehaviors::CalculateSeperationForces(kmint::pigisland::pig &pig) const
 		{
-
-			auto & midpoint = kmint::math::vector2d(0, 0);
+			auto & seperationVector = kmint::math::vector2d(0, 0);
 			auto& neigbours = pig.getNeighbours(pig.getSeperationDistance());
-			if (neigbours.size() > 0) {
-				for (const auto& location : neigbours) {
-					midpoint += location;
+				
+			for (const auto& neighbour : neigbours) {
+				auto& toVector = pig.location() - neighbour->location();
+				const auto& toVectorLength = toVector.x() * toVector.x() + toVector.y() * toVector.y();
+				if (toVectorLength > 0) {
+					toVector /= toVectorLength;
 				}
-				midpoint /= neigbours.size();
-				midpoint = pig.location() - midpoint;
+				seperationVector += toVector;
 			}
+			return seperationVector * pig.getSeperationForce();
 
-			//auto& midpointDistance = pig.location() - midpoint;
-			return midpoint * pig.getSeperationForce();
-
-
-
-
-			/*
-			for (auto i = pig.begin_perceived(); i != pig.end_perceived(); ++i) {
-				kmint::play::actor *ptr = &(*i);
-				if (auto p = dynamic_cast<kmint::pigisland::pig*>(ptr); p) {
-					//std::cout << "saw something at " << p->location().x() << ", "
-					//	<< p->location().y() << "\n";
-				}
-			}
-			return math::vector2d(0,0);*/
 		}
-		/*
-		kmint::math::vector2d SteeringBehaviors::CalculateSeekForces(const play::free_roaming_actor& target) {
-			auto force = math::vector2d(target.location().x() - pig.location().x(), target.location().y() - pig.location().y());
-			return force * pig.getMaxSpeed();
-		}*/
 
 		kmint::math::vector2d SteeringBehaviors::CalculateWanderForces(kmint::pigisland::pig &pig) const {
-			auto randX = (((double)rand() / (RAND_MAX))) * 2 - 1;
-			auto randY = (((double)rand() / (RAND_MAX))) * 2 - 1;
+			const auto randX = (((double)rand() / (RAND_MAX))) * 2 - 1;
+			const auto randY = (((double)rand() / (RAND_MAX))) * 2 - 1;
 			
 			auto wanderVector = math::vector2d(randX, randY);
-			auto wanderLength = wanderVector.x()*wanderVector.x() + wanderVector.y()*wanderVector.y();
+			const auto wanderLength = wanderVector.x()*wanderVector.x() + wanderVector.y()*wanderVector.y();
 			if (wanderLength > pig.getWanderJitter()) {
 				wanderVector /= std::sqrt(wanderLength);
 				wanderVector *= pig.getWanderRadius();
 			}
-			auto& distance = (pig.getHeading()*pig.getWanderDistance());
-			return wanderVector+distance;
+			const auto& distance = (pig.getHeading()*pig.getWanderDistance());
+
+			auto& wander = wanderVector + distance;
+			const auto& totalWanderLength = wander.x()*wander.x() + wander.y()*wander.y();
+			if (totalWanderLength > 0) {
+				wander /= std::sqrt(totalWanderLength);
+			}
+			return wander * pig.getWanderForce();
 		}
 
 
 		kmint::math::vector2d SteeringBehaviors::CalculateAlignmentForces(kmint::pigisland::pig &pig) const
 		{
-			return kmint::math::vector2d(.00000001f, .00000001f);
+			auto & avgHeading = kmint::math::vector2d(0, 0);//pig.location();
+			const auto& neigbours = pig.getNeighbours(pig.range_of_perception());
+			if (neigbours.size() > 0) {
+				for (const auto& neighbour : neigbours) {
+					avgHeading += neighbour->getHeading();
+				}
+				avgHeading /= neigbours.size();
+				avgHeading -= pig.getHeading();
+			}
+			return avgHeading * pig.getAlignmentForce();
 		}
 
 		kmint::math::vector2d SteeringBehaviors::CalculateCohesionForces(kmint::pigisland::pig &pig) const 
 		{
-			auto & midpoint = kmint::math::vector2d(0, 0);//pig.location();
+			auto& cohessionVector = kmint::math::vector2d(0, 0);
+			
 			auto& neigbours = pig.getNeighbours(pig.range_of_perception());
 			if (neigbours.size() > 0) {
-				for (const auto& location : neigbours) {
-					midpoint += location;
+				auto & midpoint = kmint::math::vector2d(0, 0);
+				for (const auto& neighbour : neigbours) {
+					midpoint += neighbour->location();
 				}
 				midpoint /= neigbours.size();
-				midpoint -= pig.location();
+				cohessionVector = midpoint - pig.location();
+				const auto& cohessionLength = cohessionVector.x() *cohessionVector.x() + cohessionVector.y()*cohessionVector.y();
+				if (cohessionLength > 0) {
+					cohessionVector = cohessionVector / std::sqrt(cohessionLength);
+				}
 			}
-
-			//auto& midpointDistance = midpoint - pig.location();
-			return midpoint*pig.getCohessionForce();
+			return cohessionVector*pig.getCohessionForce();
 		}
 
 	}
