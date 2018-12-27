@@ -17,7 +17,12 @@ public:
   void move(math::vector2d delta) { location(location() + delta); }
   void act(delta_time dt) override;
   bool perceptive() const override { return true; }
+  bool incorporeal() const override { return false; }
+
+  //bool collidable() const override { return true; }
+
   scalar range_of_perception() const override { return 30.0f; }
+  scalar radius() const override { return 8.0f; }
 
   kmint::map::map_node* const getClosestNode() const;
 
@@ -63,24 +68,25 @@ private:
   kmint::math::vector2d velocity = kmint::math::vector2d(0, 0);
   kmint::math::vector2d heading = kmint::math::vector2d(0,0);
   
+  void handleCollision();
+
   double mass = 1;
   double maxSpeed = 1;
   double maxForce = 1;
   double maxTurnRate = 1;
   
-  double wanderRadius = 3;
+  double wanderRadius = 5;
   double wanderDistance = 1.5;
   double wanderJitter = .1;
 
-  double alignmentForce = .0002;
+  double alignmentForce = .8;
   double wanderForce = 1;
-  double cohessionForce = .00;
-  double seperationForce = 0;
+  double cohessionForce = .01;
+  double seperationForce = 1;
   double attractionToShark = 1;
   double attractionToBoat = 1;
 
   double seperationDistance = 30;
-
 };
 
 } // namespace pigisland

@@ -49,6 +49,8 @@ void pig::act(delta_time dt) {
   
   
   move(velocity);
+  handleCollision();
+  //handle_collisions();
 }
 
 kmint::map::map_node* const pig::getClosestNode() const {
@@ -88,8 +90,21 @@ std::vector<pig*> pig::getNeighbours(double neighbourDistance) {
 	return neighbours;
 }
 
+void pig::handleCollision() {
+	for (auto i = begin_collision();i != end_collision(); ++i) {
+		kmint::play::actor *ptr = &(*i);
+		auto & toVector = location() - ptr->location();
 
-
+		const auto & k = num_colliding_actors();
+		double distance = 0;
+		const auto & toVectorLength = toVector.x() * toVector.x() + toVector.y() * toVector.y();
+		if (toVectorLength > 0) {
+			distance = std::sqrt(toVectorLength);
+			double overlap = (this->radius() + ptr->radius()) - distance;
+			move(toVector / distance * overlap);
+		}
+	}
+}
 
 
 
