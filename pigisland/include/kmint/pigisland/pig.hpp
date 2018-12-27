@@ -8,17 +8,23 @@
 namespace kmint {
 namespace pigisland {
 class SteeringBehaviors;
-
+class shark;
+class boat;
 class pig : public play::free_roaming_actor{
 public:
-  explicit pig(math::vector2d location);
+  explicit pig(math::vector2d location, kmint::pigisland::shark& shark, kmint::pigisland::boat& boat);
   const ui::drawable &drawable() const override { return drawable_; }
   void move(math::vector2d delta) { location(location() + delta); }
   void act(delta_time dt) override;
   bool perceptive() const override { return true; }
-  scalar range_of_perception() const override { return 30.0f; }
+  scalar range_of_perception() const override { return 50.0f; }
 
   std::vector<pig*> getNeighbours(double neighbourDistance);
+
+  shark* getShark() const { return &shark_; }
+  boat* getBoat() const { return &boat_; }
+
+
 
   double getMass() const { return mass; }
   double getMaxSpeed() const { return maxSpeed; }
@@ -36,9 +42,17 @@ public:
   double getAlignmentForce() const { return alignmentForce; }
 
   double getSeperationDistance() const { return seperationDistance; }
+
+  double getAttractionToShark() const { return attractionToShark; }
+  double getAttractionToBoat() const { return attractionToBoat; }
+  
   kmint::math::vector2d getHeading() const { return heading; }
+
 private:
   play::image_drawable drawable_;
+
+  shark& shark_;
+  boat& boat_;
 
   SteeringBehaviors* steeringBehavior;
   kmint::math::vector2d velocity = kmint::math::vector2d(0, 0);
@@ -53,11 +67,15 @@ private:
   double wanderDistance = 15;
   double wanderJitter = 1;
 
-  double alignmentForce = 0;
-  double wanderForce = 11;
-  double cohessionForce = 0;
-  double seperationForce = 0;
+  double alignmentForce = 1;
+  double wanderForce = 1;
+  double cohessionForce = .75;
+  double seperationForce = .75;
+  double attractionToShark = -1;
+  double attractionToBoat = 1;
+
   double seperationDistance = 30;
+
 };
 
 } // namespace pigisland

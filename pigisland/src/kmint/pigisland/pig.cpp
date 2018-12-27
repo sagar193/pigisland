@@ -4,6 +4,8 @@
 #include "kmint/random.hpp"
 #include <cmath>
 
+#include "kmint/pigisland/boat.hpp"
+#include "kmint/pigisland/shark.hpp"
 #include "kmint/pigisland/SteeringBehaviors.hpp"
 #include <iostream>
 #include <vector>
@@ -20,8 +22,8 @@ math::vector2d random_vector() {
 }
 } // namespace
 
-pig::pig(math::vector2d location)
-	: free_roaming_actor{ random_vector()/*location*/ }, drawable_{ *this, pig_image() }/*, steeringBehavior{ kmint::pigisland::SteeringBehaviors(*this) }*/ {
+pig::pig(math::vector2d location, kmint::pigisland::shark& shark, kmint::pigisland::boat& boat)
+	: free_roaming_actor{ random_vector()/*location*/ }, drawable_{ *this, pig_image() }, shark_(shark ), boat_(boat) {
 }
       
 

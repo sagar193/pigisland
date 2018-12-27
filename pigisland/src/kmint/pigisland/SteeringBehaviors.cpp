@@ -1,4 +1,6 @@
 #include "kmint/pigisland/SteeringBehaviors.hpp"
+#include "kmint/pigisland/shark.hpp"
+#include "kmint/pigisland/boat.hpp"
 #include <random>
 #include <cmath>
 
@@ -9,12 +11,13 @@ namespace kmint {
 
 		kmint::math::vector2d SteeringBehaviors::CalculateForces(kmint::pigisland::pig &pig) const
 		{
-			//return kmint::math::vector2d(.00000001f, .00000001f);
 			auto& wander = CalculateWanderForces(pig);
 			auto& cohession = CalculateCohesionForces(pig);
 			auto& seperation = CalculateSeperationForces(pig);
 			auto& alignment = CalculateAlignmentForces(pig);
-			auto& totalForce = wander + cohession + seperation + alignment;
+			auto& aToBoat = CalculateAttractionToBoat(pig);
+			auto& aToShark = CalculateAttractionToShark(pig);
+			auto& totalForce = wander + cohession + seperation + alignment + aToBoat + aToShark;
 			return totalForce;
 		}
 		
@@ -88,6 +91,26 @@ namespace kmint {
 				}
 			}
 			return cohessionVector*pig.getCohessionForce();
+		}
+
+		kmint::math::vector2d SteeringBehaviors::CalculateAttractionToShark(kmint::pigisland::pig &pig) const {
+			auto& attractionVector = pig.getShark()->location() - pig.location();
+			const auto& attractionLength = attractionVector.x() *attractionVector.x() + attractionVector.y()*attractionVector.y();
+			if (attractionLength > 0 && attractionLength<=(pig.range_of_perception()*pig.range_of_perception())) {
+				attractionVector = attractionVector / std::sqrt(attractionLength);
+				return attractionVector * pig.getAttractionToShark();
+			}
+			return kmint::math::vector2d(0, 0);
+		}
+
+		kmint::math::vector2d SteeringBehaviors::CalculateAttractionToBoat(kmint::pigisland::pig &pig) const {
+			auto& attractionVector = pig.getBoat()->location() - pig.location();
+			const auto& attractionLength = attractionVector.x() *attractionVector.x() + attractionVector.y()*attractionVector.y();
+			if (attractionLength > 0 && attractionLength <= (pig.range_of_perception()*pig.range_of_perception())) {
+				attractionVector = attractionVector / std::sqrt(attractionLength);
+				return attractionVector * pig.getAttractionToBoat();
+			}
+			return kmint::math::vector2d(0, 0);
 		}
 
 	}

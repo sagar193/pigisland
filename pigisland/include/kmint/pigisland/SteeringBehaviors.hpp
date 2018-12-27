@@ -13,17 +13,16 @@ namespace kmint {
 			kmint::math::vector2d CalculateForces(kmint::pigisland::pig &pig) const;
 			
 			kmint::math::vector2d CalculateWanderForces(kmint::pigisland::pig &pig) const;
-			
-			kmint::math::vector2d CalculateSeekForces(const play::free_roaming_actor& target);
 
 			kmint::math::vector2d CalculateSeperationForces(kmint::pigisland::pig &pig) const ;
 			kmint::math::vector2d CalculateAlignmentForces(kmint::pigisland::pig &pig) const ;
 			kmint::math::vector2d CalculateCohesionForces(kmint::pigisland::pig &pig) const ;
 			
+			kmint::math::vector2d CalculateAttractionToShark(kmint::pigisland::pig &pig) const;
+			kmint::math::vector2d CalculateAttractionToBoat(kmint::pigisland::pig &pig) const;
+
 		private:
 
-			
-			
 
 			//std::vector<kmint::pigisland::pig> neighbours;
 		};
