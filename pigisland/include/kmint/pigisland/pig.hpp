@@ -17,7 +17,7 @@ public:
   void move(math::vector2d delta) { location(location() + delta); }
   void act(delta_time dt) override;
   bool perceptive() const override { return true; }
-  scalar range_of_perception() const override { return 500000000.0f; }
+  scalar range_of_perception() const override { return 30.0f; }
 
   kmint::map::map_node* const getClosestNode() const;
 
@@ -68,16 +68,16 @@ private:
   double maxForce = 1;
   double maxTurnRate = 1;
   
-  double wanderRadius = 20;
-  double wanderDistance = 15;
-  double wanderJitter = 1;
+  double wanderRadius = 3;
+  double wanderDistance = 1.5;
+  double wanderJitter = .1;
 
-  double alignmentForce = 0;
-  double wanderForce = 0;
-  double cohessionForce = 0;
+  double alignmentForce = .0002;
+  double wanderForce = 1;
+  double cohessionForce = .00;
   double seperationForce = 0;
   double attractionToShark = 1;
-  double attractionToBoat = 0;
+  double attractionToBoat = 1;
 
   double seperationDistance = 30;
 

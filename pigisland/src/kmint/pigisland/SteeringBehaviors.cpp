@@ -14,6 +14,10 @@ namespace kmint {
 			auto& wander = CalculateWanderForces(pig);
 			auto& cohession = CalculateCohesionForces(pig);
 			auto& seperation = CalculateSeperationForces(pig);
+
+			if ((seperation.x()*seperation.x()+ seperation.y()*seperation.y()) > (cohession.x()*cohession.x()+ cohession.y()*cohession.y())) {
+				int k = 0;
+			}
 			auto& alignment = CalculateAlignmentForces(pig);
 			auto& aToBoat = CalculateAttractionToBoat(pig);
 			auto& aToShark = CalculateAttractionToShark(pig);
@@ -51,10 +55,10 @@ namespace kmint {
 			const auto& distance = (pig.getHeading()*pig.getWanderDistance());
 
 			auto& wander = wanderVector + distance;
-			const auto& totalWanderLength = wander.x()*wander.x() + wander.y()*wander.y();
-			if (totalWanderLength > 0) {
-				wander /= std::sqrt(totalWanderLength);
-			}
+			//const auto& totalWanderLength = wander.x()*wander.x() + wander.y()*wander.y();
+			//if (totalWanderLength > 0) {
+			//	wander /= std::sqrt(totalWanderLength);
+			//}
 			return wander * pig.getWanderForce();
 		}
 
@@ -85,10 +89,10 @@ namespace kmint {
 				}
 				midpoint /= neigbours.size();
 				cohessionVector = midpoint - pig.location();
-				const auto& cohessionLength = cohessionVector.x() *cohessionVector.x() + cohessionVector.y()*cohessionVector.y();
-				if (cohessionLength > 0) {
-					cohessionVector = cohessionVector / std::sqrt(cohessionLength);
-				}
+				//const auto& cohessionLength = cohessionVector.x() *cohessionVector.x() + cohessionVector.y()*cohessionVector.y();
+				//if (cohessionLength > 0) {
+				//	cohessionVector = cohessionVector / std::sqrt(cohessionLength);
+				//}
 			}
 			return cohessionVector*pig.getCohessionForce();
 		}
@@ -97,7 +101,7 @@ namespace kmint {
 			auto& attractionVector = pig.getShark()->location() - pig.location();
 			const auto& attractionLength = attractionVector.x() *attractionVector.x() + attractionVector.y()*attractionVector.y();
 			if (attractionLength > 0 && attractionLength<=(pig.range_of_perception()*pig.range_of_perception())) {
-				attractionVector = attractionVector / std::sqrt(attractionLength);
+				//attractionVector = attractionVector / std::sqrt(attractionLength);
 				return attractionVector * pig.getAttractionToShark();
 			}
 			return kmint::math::vector2d(0, 0);
@@ -107,7 +111,7 @@ namespace kmint {
 			auto& attractionVector = pig.getBoat()->location() - pig.location();
 			const auto& attractionLength = attractionVector.x() *attractionVector.x() + attractionVector.y()*attractionVector.y();
 			if (attractionLength > 0 && attractionLength <= (pig.range_of_perception()*pig.range_of_perception())) {
-				attractionVector = attractionVector / std::sqrt(attractionLength);
+				//attractionVector = attractionVector / std::sqrt(attractionLength);
 				return attractionVector * pig.getAttractionToBoat();
 			}
 			return kmint::math::vector2d(0, 0);
