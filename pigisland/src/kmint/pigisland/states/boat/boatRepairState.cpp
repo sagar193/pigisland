@@ -14,8 +14,8 @@ namespace pigisland {
 	{
 		for (int i = 0; i < 3; i++) {
 			auto& test = find_node_of_kind(_boat.graph(), '1' + i);
-			_moorings[i] = &test;
-			_mooringsEffectiveness[i] = 200;
+			_moorings[1+i] = &test;
+			_mooringsEffectiveness[1 + i] = 200;
 		}
 		_goal = nullptr;
 	}
@@ -37,26 +37,47 @@ namespace pigisland {
 	}
 
 	void boatRepairState::repair() {
+		int repair = 0;
 		if (_goal->node_info().kind == '1') {
-			_boat.durability(random_int(30, 51));
+			repair = random_int(30, 51);
+			_boat.durability(repair);
+			_mooringsEffectiveness.at(1) = (_mooringsEffectiveness.at(1) + repair) / 2;
 			_goal = nullptr;
 		}
 		else if (_goal->node_info().kind == '2') {
-			_boat.durability(random_int(20, 101));
+			repair = random_int(20, 101);
+			_boat.durability(repair);
+			_mooringsEffectiveness.at(2) = (_mooringsEffectiveness.at(2) + repair) / 2;
 			_goal = nullptr;
 
 		}
 		else if (_goal->node_info().kind == '3') {
 			_boat.durability(50);
+			_mooringsEffectiveness.at(3) = (_mooringsEffectiveness.at(3) + repair) / 2;
 			_goal = nullptr;
 		}
 		else {
 			throw "something went wrong repairing boat";
 		}
+		_boat.setState(boat::WANDER_STATE);
 	}
 
 	void boatRepairState::pickGoal() {
-
+		int totalEffectiveness = 0;
+		for (auto it = _mooringsEffectiveness.begin(); it != _mooringsEffectiveness.end(); it++) {
+			totalEffectiveness += it->second;
+		}
+		int choice = random_int(0, totalEffectiveness);
+		int lastValue = 0;
+		for (int i = 1; i < _mooringsEffectiveness.size()+1; i++) {
+			if (choice < _mooringsEffectiveness.at(i)+lastValue) {
+				_goal = _moorings.at(i);
+				return;
+			}
+			else {
+				lastValue += _mooringsEffectiveness.at(i);
+			}
+		}
 	}
 }
 }
