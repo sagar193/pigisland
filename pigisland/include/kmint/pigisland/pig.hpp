@@ -44,11 +44,11 @@ private:
   double maxSpeed = 1;
   double maxForce = 1;
   double maxTurnRate = 1;
-  double wanderRadius = 1.0;
-  double wanderDistance = 1.5;//2.5;
-  double wanderJitter = 0;
-  double cohessionForce = 1.1;
-  double seperationForce = 1000;
+  double wanderRadius = 10.0;
+  double wanderDistance = 15;//2.5;
+  double wanderJitter = 10;
+  double cohessionForce = 1;
+  double seperationForce = 3;
   double seperationDistance = 20;
 };
 
