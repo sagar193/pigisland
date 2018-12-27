@@ -28,7 +28,7 @@ public:
   kmint::map::map_graph *_g() { return map_; };
   const kmint::map::map_node* get_resting_place() { return resting_place_; };
   const int get_energy() { return _energy; };
-  int setEnergy(int energy) { _energy = energy; };
+  void setEnergy(int energy) { _energy = energy; };
 
   void setState(STATE_NAMES state);
 private:
