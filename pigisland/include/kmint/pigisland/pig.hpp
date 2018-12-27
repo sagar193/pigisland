@@ -75,13 +75,13 @@ private:
   double maxForce = 1;
   double maxTurnRate = 1;
   
-  double wanderRadius = 5;
-  double wanderDistance = 1.5;
+  double wanderRadius = .5;
+  double wanderDistance = 1;
   double wanderJitter = .1;
 
-  double alignmentForce = 1;
-  double wanderForce = .5;
-  double cohessionForce = .025;
+  double alignmentForce = .5;
+  double wanderForce = 1;
+  double cohessionForce = .05;
   double seperationForce = 1;
   double attractionToShark = -1;
   double attractionToBoat = 1;
