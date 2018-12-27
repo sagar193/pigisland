@@ -24,7 +24,7 @@ public:
   bool perceptive() const override { return true; };
   kmint::map::map_graph *_g() { return map_; };
   const int durability() { return _durability; };
-  void durability(int durability) { _durability = durability; };
+  void durability(int durability) { _durability += durability; };
 
   void setState(STATE_NAMES state);
 private:

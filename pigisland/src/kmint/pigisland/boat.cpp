@@ -14,6 +14,7 @@ boat::boat(kmint::map::map_graph &g)
 {
 	RegisterStates();
 	setState(WANDER_STATE);
+	_durability = 100;
 }
 
 void boat::act(delta_time dt) {

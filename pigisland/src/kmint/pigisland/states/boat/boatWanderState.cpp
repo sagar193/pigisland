@@ -18,6 +18,9 @@ void boatWanderState::act()
 {
 	_boat.node(random_adjacent_node(_boat.node()));
 	_boat.durability(-1);
+	if (_boat.durability() <= 0) {
+		_boat.setState(boat::REPAIR_STATE);
+	}
 }
 
 }
