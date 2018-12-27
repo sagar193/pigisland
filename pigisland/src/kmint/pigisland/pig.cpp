@@ -49,7 +49,7 @@ void pig::act(delta_time dt) {
   move(velocity);
 }
 
-std::vector<kmint::math::vector2d> pig::getNeighbours() {
+std::vector<kmint::math::vector2d> pig::getNeighbours(double neighbourDistance) {
 	std::vector<kmint::math::vector2d> neighbours;
 	for (auto i = begin_perceived(); i != end_perceived(); ++i) {
 		kmint::play::actor *ptr = &(*i);
@@ -59,7 +59,7 @@ std::vector<kmint::math::vector2d> pig::getNeighbours() {
 			auto& distance = this->location() - p->location();
 
 			auto length = distance.x() * distance.x() + distance.y()*distance.y();
-			if (length <= range_of_perception() * range_of_perception()) {
+			if (length <= neighbourDistance * neighbourDistance) {
 				neighbours.push_back(p->location());
 			}
 		}

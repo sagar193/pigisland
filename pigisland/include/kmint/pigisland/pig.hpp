@@ -18,7 +18,7 @@ public:
   bool perceptive() const override { return true; }
   scalar range_of_perception() const override { return 30.0f; }
 
-  std::vector<kmint::math::vector2d> getNeighbours();
+  std::vector<kmint::math::vector2d> getNeighbours(double neighbourDistance);
 
   double getMass() const { return mass; }
   double getMaxSpeed() const { return maxSpeed; }
@@ -29,6 +29,7 @@ public:
   double getWanderJitter() const { return wanderJitter; }
   double getCohessionForce() const { return cohessionForce; }
   double getSeperationForce() const { return seperationForce; }
+  double getSeperationDistance() const { return seperationDistance; }
   kmint::math::vector2d getHeading() const { return heading; }
 private:
   play::image_drawable drawable_;
@@ -46,8 +47,9 @@ private:
   double wanderRadius = 1.0;
   double wanderDistance = 1.5;//2.5;
   double wanderJitter = 0;
-  double cohessionForce = .9;
-  double seperationForce = .7;
+  double cohessionForce = 1.1;
+  double seperationForce = 1000;
+  double seperationDistance = 20;
 };
 
 } // namespace pigisland

@@ -21,7 +21,7 @@ namespace kmint {
 		{
 
 			auto & midpoint = kmint::math::vector2d(0, 0);
-			auto& neigbours = pig.getNeighbours();
+			auto& neigbours = pig.getNeighbours(pig.getSeperationDistance());
 			if (neigbours.size() > 0) {
 				for (const auto& location : neigbours) {
 					midpoint += location;
@@ -75,7 +75,7 @@ namespace kmint {
 		kmint::math::vector2d SteeringBehaviors::CalculateCohesionForces(kmint::pigisland::pig &pig) const 
 		{
 			auto & midpoint = kmint::math::vector2d(0, 0);//pig.location();
-			auto& neigbours = pig.getNeighbours();
+			auto& neigbours = pig.getNeighbours(pig.range_of_perception());
 			if (neigbours.size() > 0) {
 				for (const auto& location : neigbours) {
 					midpoint += location;
