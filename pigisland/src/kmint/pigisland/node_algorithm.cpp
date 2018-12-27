@@ -28,6 +28,5 @@ map::map_node const &find_shark_resting_place(map::map_graph const &graph) {
 int waiting_time(map::map_node const &node) {
   return static_cast<int>(node[0].weight());
 }
-
 } // namespace pigisland
 } // namespace kmint

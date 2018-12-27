@@ -1,10 +1,10 @@
 #pragma once
 
 #include "kmint/primitives.hpp"
-class State
+class state
 {
 public:
-	virtual void act(kmint::delta_time dt) = 0;
+	virtual void act() = 0;
 private:
 
 };
