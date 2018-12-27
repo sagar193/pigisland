@@ -79,11 +79,11 @@ private:
   double wanderDistance = 1.5;
   double wanderJitter = .1;
 
-  double alignmentForce = .8;
-  double wanderForce = 1;
-  double cohessionForce = .01;
+  double alignmentForce = 1;
+  double wanderForce = .5;
+  double cohessionForce = .025;
   double seperationForce = 1;
-  double attractionToShark = 1;
+  double attractionToShark = -1;
   double attractionToBoat = 1;
 
   double seperationDistance = 30;
