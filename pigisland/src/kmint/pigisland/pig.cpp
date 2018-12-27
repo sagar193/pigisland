@@ -43,7 +43,7 @@ void pig::act(delta_time dt) {
 		  velocity = newHeading * maxSpeed;
 	  }
   }
-  std::cout << velocity.x() << "    " << velocity.y() << std::endl;
+  //std::cout << velocity.x() << "    " << velocity.y() << std::endl;
   
   
   move(velocity);

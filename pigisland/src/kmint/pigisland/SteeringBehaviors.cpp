@@ -27,10 +27,11 @@ namespace kmint {
 					midpoint += location;
 				}
 				midpoint /= neigbours.size();
+				midpoint = pig.location() - midpoint;
 			}
 
-			auto& midpointDistance = pig.location() - midpoint;
-			return midpointDistance * pig.getSeperationForce();
+			//auto& midpointDistance = pig.location() - midpoint;
+			return midpoint * pig.getSeperationForce();
 
 
 
@@ -73,17 +74,18 @@ namespace kmint {
 
 		kmint::math::vector2d SteeringBehaviors::CalculateCohesionForces(kmint::pigisland::pig &pig) const 
 		{
-			auto & midpoint = kmint::math::vector2d(0,0);
+			auto & midpoint = kmint::math::vector2d(0, 0);//pig.location();
 			auto& neigbours = pig.getNeighbours();
 			if (neigbours.size() > 0) {
 				for (const auto& location : neigbours) {
 					midpoint += location;
 				}
-				//midpoint /= neigbours.size();
+				midpoint /= neigbours.size();
+				midpoint -= pig.location();
 			}
 
-			auto& midpointDistance = midpoint - pig.location();
-			return midpointDistance*pig.getCohessionForce();
+			//auto& midpointDistance = midpoint - pig.location();
+			return midpoint*pig.getCohessionForce();
 		}
 
 	}

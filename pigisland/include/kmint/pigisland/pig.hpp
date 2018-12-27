@@ -43,11 +43,11 @@ private:
   double maxSpeed = 1;
   double maxForce = 1;
   double maxTurnRate = 1;
-  double wanderRadius = 10;
-  double wanderDistance = 5;//2.5;
+  double wanderRadius = 1.0;
+  double wanderDistance = 1.5;//2.5;
   double wanderJitter = 0;
-  double cohessionForce = 0.1;
-  double seperationForce = 0.00;
+  double cohessionForce = .9;
+  double seperationForce = .7;
 };
 
 } // namespace pigisland
