@@ -7,7 +7,6 @@
 #include "kmint/pigisland/states/shark/huntState.hpp"
 #include "kmint/pigisland/states/shark/tiredState.hpp"
 
-///todo: langzamer gaan als je tussen de rotsen bent
 ///todo: signaal afgeven als haai bij resting place is
 ///todo: biggen opeten
 
