@@ -3,6 +3,7 @@
 #include "kmint/pigisland/resources.hpp"
 #include "kmint/random.hpp"
 #include <cmath>
+#include "kmint/pigisland/node_algorithm.hpp"
 
 #include "kmint/pigisland/boat.hpp"
 #include "kmint/pigisland/shark.hpp"
@@ -22,10 +23,9 @@ math::vector2d random_vector() {
 }
 } // namespace
 
-pig::pig(math::vector2d location, kmint::pigisland::shark& shark, kmint::pigisland::boat& boat)
-	: free_roaming_actor{ random_vector()/*location*/ }, drawable_{ *this, pig_image() }, shark_(shark ), boat_(boat) {
+pig::pig(math::vector2d location, kmint::map::map_graph& graph,kmint::pigisland::shark& shark, kmint::pigisland::boat& boat)
+	: free_roaming_actor{ random_vector()/*location*/ }, drawable_{ *this, pig_image() }, _graph(graph), shark_(shark ), boat_(boat) {
 }
-      
 
 void pig::act(delta_time dt) {
   free_roaming_actor::act(dt);
@@ -49,6 +49,25 @@ void pig::act(delta_time dt) {
   
   
   move(velocity);
+}
+
+kmint::map::map_node* const pig::getClosestNode() const {
+	double closestNodeDistance = 99999;
+	kmint::map::map_node* closestNode;
+	
+	for (kmint::map::map_node& m : _graph) {
+		if (closestNodeDistance > calculateDistance(m)) {
+			closestNodeDistance = calculateDistance(m);
+			closestNode = &m;
+		}
+	}
+	
+
+	return closestNode;
+}
+
+double pig::calculateDistance(const kmint::map::map_node& mapNode) const {
+	return sqrt(pow(location().x() - mapNode.location().x(), 2) + pow(location().y() - mapNode.location().y(), 2));
 }
 
 std::vector<pig*> pig::getNeighbours(double neighbourDistance) {
@@ -77,5 +96,4 @@ std::vector<pig*> pig::getNeighbours(double neighbourDistance) {
 
 
 } // namespace pigisland
-
 } // namespace kmint

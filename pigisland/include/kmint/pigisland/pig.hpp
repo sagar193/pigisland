@@ -12,12 +12,14 @@ class shark;
 class boat;
 class pig : public play::free_roaming_actor{
 public:
-  explicit pig(math::vector2d location, kmint::pigisland::shark& shark, kmint::pigisland::boat& boat);
+  explicit pig(math::vector2d location, kmint::map::map_graph& graph, kmint::pigisland::shark& shark, kmint::pigisland::boat& boat);
   const ui::drawable &drawable() const override { return drawable_; }
   void move(math::vector2d delta) { location(location() + delta); }
   void act(delta_time dt) override;
   bool perceptive() const override { return true; }
-  scalar range_of_perception() const override { return 50.0f; }
+  scalar range_of_perception() const override { return 500000000.0f; }
+
+  kmint::map::map_node* const getClosestNode() const;
 
   std::vector<pig*> getNeighbours(double neighbourDistance);
 
@@ -50,6 +52,9 @@ public:
 
 private:
   play::image_drawable drawable_;
+  kmint::map::map_graph& _graph;
+
+  double calculateDistance(const kmint::map::map_node& mapNode) const;
 
   shark& shark_;
   boat& boat_;
@@ -67,12 +72,12 @@ private:
   double wanderDistance = 15;
   double wanderJitter = 1;
 
-  double alignmentForce = 1;
-  double wanderForce = 1;
-  double cohessionForce = .75;
-  double seperationForce = .75;
-  double attractionToShark = -1;
-  double attractionToBoat = 1;
+  double alignmentForce = 0;
+  double wanderForce = 0;
+  double cohessionForce = 0;
+  double seperationForce = 0;
+  double attractionToShark = 1;
+  double attractionToBoat = 0;
 
   double seperationDistance = 30;
 

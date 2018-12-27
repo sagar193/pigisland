@@ -29,8 +29,7 @@ int main() {
 
   s.build_actor<play::map_actor>(math::vector2d{0.f, 0.f}, map.graph());
   for (int i = 0; i < 100; ++i) {
-    s.build_actor<pigisland::pig>(math::vector2d(i * 10.0f, i * 6.0f),shark,boat);
-	
+    s.build_actor<pigisland::pig>(math::vector2d(i * 10.0f, i * 6.0f), map.graph(),shark,boat);
   }
   
 
