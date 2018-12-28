@@ -53,7 +53,7 @@ namespace pigisland {
 		}
 		else if (_goal->node_info().kind == '3') {
 			_boat.durability(50);
-			_mooringsEffectiveness.at(3) = (_mooringsEffectiveness.at(3) + repair) / 2;
+			_mooringsEffectiveness.at(3) = (_mooringsEffectiveness.at(3) + 50) / 2;
 			_goal = nullptr;
 		}
 		else {
