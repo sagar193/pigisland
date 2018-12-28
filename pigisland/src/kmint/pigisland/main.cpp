@@ -5,6 +5,7 @@
 #include "kmint/pigisland/shark.hpp"
 #include "kmint/play.hpp"
 #include "kmint/ui.hpp"
+#include "kmint/pigisland/ActorContainer.hpp"
 
 using namespace kmint;
 int main() {
@@ -21,16 +22,9 @@ int main() {
   map.graph()[0].tagged(true);
   s.build_actor<play::background>(math::size(1024, 768),
                                   graphics::image{map.background_image()});
-
+  kmint::pigisland::ActorContainer actorContainer(map.graph(), s);
   
-
-  auto& shark = s.build_actor<pigisland::shark>(map.graph());
-  auto& boat = s.build_actor<pigisland::boat>(map.graph());
-
   s.build_actor<play::map_actor>(math::vector2d{0.f, 0.f}, map.graph());
-  for (int i = 0; i < 100; ++i) {
-    s.build_actor<pigisland::pig>(math::vector2d(i * 10.0f, i * 6.0f), map.graph(),shark,boat);
-  }
   
 
   // Maak een event_source aan (hieruit kun je alle events halen, zoals
