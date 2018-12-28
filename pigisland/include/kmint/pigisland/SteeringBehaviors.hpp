@@ -9,22 +9,15 @@ namespace kmint {
 		class SteeringBehaviors {
 		public:
 			SteeringBehaviors();
-			void getNeighbours();
-			kmint::math::vector2d CalculateForces(kmint::pigisland::pig &pig) const;
+			math::vector2d CalculateForces(pig &pig) const;
+			math::vector2d CalculateWanderForces(pig &pig) const;
+
+			math::vector2d CalculateSeparationForces(pig &pig) const ;
+			math::vector2d CalculateAlignmentForces(pig &pig) const ;
+			math::vector2d CalculateCohesionForces(pig &pig) const ;
 			
-			kmint::math::vector2d CalculateWanderForces(kmint::pigisland::pig &pig) const;
-
-			kmint::math::vector2d CalculateSeperationForces(kmint::pigisland::pig &pig) const ;
-			kmint::math::vector2d CalculateAlignmentForces(kmint::pigisland::pig &pig) const ;
-			kmint::math::vector2d CalculateCohesionForces(kmint::pigisland::pig &pig) const ;
-			
-			kmint::math::vector2d CalculateAttractionToShark(kmint::pigisland::pig &pig) const;
-			kmint::math::vector2d CalculateAttractionToBoat(kmint::pigisland::pig &pig) const;
-
-		private:
-
-
-			//std::vector<kmint::pigisland::pig> neighbours;
+			math::vector2d CalculateAttractionToShark(pig &pig) const;
+			math::vector2d CalculateAttractionToBoat(pig &pig) const;
 		};
 	}
 }

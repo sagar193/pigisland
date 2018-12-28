@@ -12,6 +12,13 @@
 namespace kmint {
 namespace play {
 
+/*! \brief A stage manages actors
+ *
+ * The stage facilitates the interaction of actors in a simulation.
+ *
+ * It constructs and owns the actors on stage. It is responsible for maintaining the actors'
+ * perceived and collision sets and calls the actors' act methods every tick.
+ */
 class stage {
   using container = std::vector<std::unique_ptr<actor>>;
 

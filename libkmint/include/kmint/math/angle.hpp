@@ -38,6 +38,14 @@ public:
     value_ *= -1.0;
     return *this;
   }
+  static constexpr angle from_radians(scalar rad) noexcept {
+    return angle{rad};
+  }
+
+  static constexpr angle from_degrees(scalar deg) noexcept {
+    return angle{deg / 180.f * pi};
+  }
+
   friend constexpr angle operator"" _rad(
       long double r) noexcept; // needs to be
                                // a friend to call private constructor
@@ -69,13 +77,15 @@ public:
 };
 
 constexpr angle operator"" _rad(long double r) noexcept {
-  return angle{static_cast<scalar>(r)};
+  return angle::from_radians(r);
 }
 
 constexpr angle operator"" _deg(long double d) noexcept {
-  return angle{static_cast<scalar>(d * pi / 180.0)};
+  return angle::from_degrees(d);
 }
 
+scalar cos(angle a);
+scalar sin(angle a);
 angle acos(scalar c);
 angle atan(scalar c);
 angle atan2(scalar y, scalar x);

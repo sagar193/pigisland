@@ -7,6 +7,9 @@
 
 namespace kmint::play {
 
+/*! \brief Base class for actors that are situated on a graph node
+ * \tparam Graph The type of graph to the nodes of which this actor is bound
+ */
 template <typename Graph> class graph_bound_actor : public actor {
 public:
   using node_type = typename Graph::node_type;
@@ -24,6 +27,8 @@ private:
   node_type const *node_;
 };
 
+/*! \brief Base class for actors that are bound to the nodes of a map
+ */
 using map_bound_actor = graph_bound_actor<map::map_graph>;
 
 } // namespace kmint::play
