@@ -18,6 +18,7 @@ add_executable(pigisland
   src/kmint/pigisland/shark.cpp
   src/kmint/pigisland/boat.cpp
   src/kmint/pigisland/pig.cpp
+  src/kmint/pigisland/SteeringBehaviors.cpp
   src/kmint/pigisland/states/shark/fleeState.cpp
   src/kmint/pigisland/states/shark/huntState.cpp
   src/kmint/pigisland/states/shark/tiredState.cpp
