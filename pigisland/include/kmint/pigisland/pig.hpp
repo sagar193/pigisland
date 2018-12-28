@@ -16,13 +16,14 @@ public:
   const ui::drawable &drawable() const override { return drawable_; }
   void move(math::vector2d delta) { location(location() + delta); }
   void act(delta_time dt) override;
-  bool perceptive() const override { return true; }
-  bool incorporeal() const override { return false; }
-
-  //bool collidable() const override { return true; }
-
+  bool perceptive() const override { return perceptive_; }
+  bool perceivable() const override { return perceivable_; }
   scalar range_of_perception() const override { return 30.0f; }
   scalar radius() const override { return 8.0f; }
+  bool incorporeal() const override { return false; }
+  void die();
+
+  
 
   kmint::map::map_node* const getClosestNode() const;
 
@@ -56,6 +57,11 @@ public:
   kmint::math::vector2d getHeading() const { return heading; }
 
 private:
+  bool perceptive_ = true;
+  bool perceivable_ = true;
+  //bool dead_ = false;
+
+
   play::image_drawable drawable_;
   kmint::map::map_graph& _graph;
 
@@ -75,14 +81,14 @@ private:
   double maxForce = 1;
   double maxTurnRate = 1;
   
-  double wanderRadius = .5;
+  double wanderRadius = 5;
   double wanderDistance = 1;
   double wanderJitter = .1;
 
-  double alignmentForce = .5;
+  double alignmentForce = 1;
   double wanderForce = 1;
   double cohessionForce = .05;
-  double seperationForce = 1;
+  double seperationForce = 0.001;
   double attractionToShark = -1;
   double attractionToBoat = 1;
 

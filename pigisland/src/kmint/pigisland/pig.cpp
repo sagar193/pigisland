@@ -49,7 +49,7 @@ void pig::act(delta_time dt) {
   
   
   move(velocity);
-  handleCollision();
+  //handleCollision();
   //handle_collisions();
 }
 
@@ -77,14 +77,16 @@ std::vector<pig*> pig::getNeighbours(double neighbourDistance) {
 	for (auto i = begin_perceived(); i != end_perceived(); ++i) {
 		kmint::play::actor *ptr = &(*i);
 		if (auto p = dynamic_cast<kmint::pigisland::pig*>(ptr); p) {
-			//std::cout << "saw something at " << p->location().x() << ", "
-			//	<< p->location().y() << "\n";
-			auto& distance = this->location() - p->location();
-
-			auto length = distance.x() * distance.x() + distance.y()*distance.y();
-			if (length <= neighbourDistance * neighbourDistance) {
+			//auto& distance = this->location() - p->location();
+			//const auto& dot = kmint::math::dot(heading, kmint::math::normalize(distance));
+			//if(dot>=0)
+			//{
 				neighbours.push_back(p);
-			}
+			//}
+			//auto length = distance.x() * distance.x() + distance.y()*distance.y();
+			//if (length <= neighbourDistance * neighbourDistance) {
+			//	neighbours.push_back(p);
+			//}
 		}
 	}
 	return neighbours;
