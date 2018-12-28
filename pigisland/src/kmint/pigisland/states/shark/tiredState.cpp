@@ -5,6 +5,7 @@
 #include "kmint/map/map.hpp"
 #include "kmint/play.hpp"
 #include "kmint/pigisland/shark.hpp"
+#include "kmint/pigisland/ActorContainer.hpp"
 
 namespace kmint {
 namespace pigisland {
@@ -15,6 +16,8 @@ tiredState::tiredState(shark & shark) :_shark(shark)
 void tiredState::act()
 {
 	if (_shark.node().node_id() == _shark.get_resting_place()->node_id()) {
+		if (_shark.get_energy() == 0)
+			_shark.actorContainer()->newRound();
 		_shark.setEnergy(+ 1);
 		if (_shark.get_energy() == 100) {
 			_shark.setState(shark::WANDER_STATE);

@@ -6,6 +6,7 @@
 #include "kmint/pigisland/states/shark/fleeState.hpp"
 #include "kmint/pigisland/states/shark/huntState.hpp"
 #include "kmint/pigisland/states/shark/tiredState.hpp"
+#include "kmint/pigisland/ActorContainer.hpp"
 
 ///todo: signaal afgeven als haai bij resting place is
 ///todo: biggen opeten
@@ -13,8 +14,9 @@
 namespace kmint {
 namespace pigisland {
 
-	shark::shark(kmint::map::map_graph &g)
+	shark::shark(kmint::map::map_graph &g, ActorContainer& actorContainer)
 		: play::map_bound_actor{ g, find_shark_resting_place(g) },
+		_actorContainer(actorContainer),
 		drawable_{ *this, shark_image() }, map_{ &g }, resting_place_(&node())
 {
 	RegisterStates();

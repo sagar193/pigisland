@@ -16,7 +16,7 @@ public:
 	ActorContainer operator=(ActorContainer&& other) = delete;
 
 	void addPigReference(pig* newPig);
-
+	void newRound();
 private:
 	std::vector<pig*> pigVector;
 	kmint::map::map_graph &_g;
