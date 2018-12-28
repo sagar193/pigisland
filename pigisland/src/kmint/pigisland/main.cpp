@@ -31,8 +31,15 @@ int main() {
 
   
   s.build_actor<play::map_actor>(math::vector2d{ 0.f, 0.f }, map.graph());
+  for (int i = 0; i < 10; ++i) {
+	  s.build_actor<pigisland::wall>(math::vector2d{ i * 100.0f, .0f });
+	  s.build_actor<pigisland::wall>(math::vector2d{ 0.0f, i * 100.0f });
+	  s.build_actor<pigisland::wall>(math::vector2d{ i * 100.0f, 750.0f });
+	  s.build_actor<pigisland::wall>(math::vector2d{ 1000.0f, i * 100.0f });
+  }
+
+
   for (int i = 0; i < 100; ++i) {
-	s.build_actor<pigisland::wall>(math::vector2d{ i * 10.0f, i * 6.0f });
     s.build_actor<pigisland::pig>(math::vector2d(i * 10.0f, i * 6.0f),1,1,1,.05,-1,1, map.graph(),shark,boat);
   }
   

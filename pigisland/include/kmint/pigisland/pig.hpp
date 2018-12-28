@@ -72,7 +72,7 @@ private:
   math::vector2d heading = math::vector2d(0,0);
   
   double mass = 1;
-  double maxSpeed = 1.5;
+  double maxSpeed = 5;
   double wanderRadius = 5;
   double wanderDistance = 1;
   double wanderJitter = .1;
