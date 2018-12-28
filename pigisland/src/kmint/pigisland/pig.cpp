@@ -23,8 +23,17 @@ math::vector2d random_vector() {
 }
 } // namespace
 
-pig::pig(math::vector2d location, kmint::map::map_graph& graph,kmint::pigisland::shark& shark, kmint::pigisland::boat& boat)
+pig::pig(math::vector2d location,
+	double wanderForce, double allignmentForce, double sepArationForce, double cohessionForce, double attractionToShark, double attractionToBoat
+	, kmint::map::map_graph& graph, kmint::pigisland::shark& shark, kmint::pigisland::boat& boat)
 	: free_roaming_actor{ random_vector()/*location*/ }, drawable_{ *this, pig_image() }, _graph(graph), shark_(shark ), boat_(boat) {
+	dna_[WANDER] = wanderForce;
+	dna_[SEPARATION] = sepArationForce;
+	dna_[COHESSION] = cohessionForce;
+	dna_[ALLIGNMENT] = allignmentForce;
+	dna_[ATTRACTIONTOSHARK] = attractionToShark;
+	dna_[ATTRACTIONTOBOAT] = attractionToBoat;
+
 }
 
 void pig::act(delta_time dt) {
@@ -52,10 +61,10 @@ void pig::act(delta_time dt) {
 	}
 }
 
-kmint::map::map_node* const pig::getClosestNode() const {
+map::map_node* const pig::getClosestNode() const {
 	double closestNodeDistance = 99999;
-	kmint::map::map_node* closestNode;
-	for (kmint::map::map_node& m : _graph) {
+	map::map_node* closestNode;
+	for (map::map_node& m : _graph) {
 		if (closestNodeDistance > calculateDistance(m)) {
 			closestNodeDistance = calculateDistance(m);
 			closestNode = &m;
@@ -67,12 +76,12 @@ kmint::map::map_node* const pig::getClosestNode() const {
 void pig::die()
 {
 	for (auto i = begin_collision();i != end_collision(); ++i) {
-		kmint::play::actor *ptr = &(*i);
-		if (auto b = dynamic_cast<kmint::pigisland::boat*>(ptr); b) {
+		actor *ptr = &(*i);
+		if (auto b = dynamic_cast<boat*>(ptr); b) {
 			alive_ = false;
 			//drawable_.set_tint(kmint::graphics::colors::black);
 		}
-		else if (auto s = dynamic_cast<kmint::pigisland::shark*>(ptr);s)
+		else if (auto s = dynamic_cast<shark*>(ptr);s)
 		{
 			alive_ = false;
 			//drawable_.set_tint(kmint::graphics::colors::black);
@@ -85,20 +94,16 @@ double pig::calculateDistance(const kmint::map::map_node& mapNode) const {
 	return sqrt(pow(location().x() - mapNode.location().x(), 2) + pow(location().y() - mapNode.location().y(), 2));
 }
 
-std::vector<pig*> pig::getNeighbours(double neighbourDistance) {
+std::vector<pig*> pig::getNeighbours() {
 	std::vector<pig*> neighbours;
 	for (auto i = begin_perceived(); i != end_perceived(); ++i) {
-		kmint::play::actor *ptr = &(*i);
-		if (auto p = dynamic_cast<kmint::pigisland::pig*>(ptr); p) {
+		actor *ptr = &(*i);
+		if (auto p = dynamic_cast<pig*>(ptr); p) {
 			//auto& distance = this->location() - p->location();
 			//const auto& dot = kmint::math::dot(heading, kmint::math::normalize(distance));
 			//if(dot>=0)
 			//{
 				neighbours.push_back(p);
-			//}
-			//auto length = distance.x() * distance.x() + distance.y()*distance.y();
-			//if (length <= neighbourDistance * neighbourDistance) {
-			//	neighbours.push_back(p);
 			//}
 		}
 	}
@@ -107,7 +112,7 @@ std::vector<pig*> pig::getNeighbours(double neighbourDistance) {
 
 void pig::handleCollision() {
 	for (auto i = begin_collision();i != end_collision(); ++i) {
-		kmint::play::actor *ptr = &(*i);
+		actor *ptr = &(*i);
 		auto & toVector = location() - ptr->location();
 
 		const auto & k = num_colliding_actors();
