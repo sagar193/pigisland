@@ -15,16 +15,16 @@ class boat;
 class pig : public play::free_roaming_actor{
 public:
 enum Forces{
-	WANDER,
-	ALLIGNMENT,
-	COHESSION,
-	SEPARATION,
-	ATTRACTIONTOSHARK,
-	ATTRACTIONTOBOAT
+  WANDER,
+  ALIGNMENT,
+  COHESION,
+  SEPARATION,
+  ATTRACTIONTOSHARK,
+  ATTRACTIONTOBOAT
   };
 
-	explicit pig(math::vector2d location,
-	  double wanderForce, double allignmentForce, double sperationForce, double cohessionForce, double attractionToShark,double attractionToBoat
+  explicit pig(math::vector2d location,
+	  double wanderForce, double alignmentForce, double separationForce, double cohesionForce, double attractionToShark,double attractionToBoat
 	  ,map::map_graph& graph, shark& shark, boat& boat);
 
   const ui::drawable &drawable() const override { return drawable_; }
@@ -54,7 +54,7 @@ enum Forces{
  
   std::map<Forces, double> getDNA() { return dna_; }
   math::vector2d getHeading() const { return heading; }
-  //kmint::pigisland::DNA getDNA() const { return dna_; };
+
 private:
   bool alive_ = true;
   

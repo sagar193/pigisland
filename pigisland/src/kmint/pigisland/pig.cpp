@@ -10,6 +10,7 @@
 #include "kmint/pigisland/SteeringBehaviors.hpp"
 #include <iostream>
 #include <vector>
+#include "kmint/pigisland/wall.hpp"
 
 namespace kmint {
 namespace pigisland {
@@ -24,13 +25,13 @@ math::vector2d random_vector() {
 } // namespace
 
 pig::pig(math::vector2d location,
-	double wanderForce, double allignmentForce, double sepArationForce, double cohessionForce, double attractionToShark, double attractionToBoat
-	, kmint::map::map_graph& graph, kmint::pigisland::shark& shark, kmint::pigisland::boat& boat)
+	double wanderForce, double alignmentForce, double separationForce, double cohesionForce, double attractionToShark, double attractionToBoat
+	, map::map_graph& graph, shark& shark, boat& boat)
 	: free_roaming_actor{ random_vector()/*location*/ }, drawable_{ *this, pig_image() }, _graph(graph), shark_(shark ), boat_(boat) {
 	dna_[WANDER] = wanderForce;
-	dna_[SEPARATION] = sepArationForce;
-	dna_[COHESSION] = cohessionForce;
-	dna_[ALLIGNMENT] = allignmentForce;
+	dna_[SEPARATION] = separationForce;
+	dna_[COHESION] = cohesionForce;
+	dna_[ALIGNMENT] = alignmentForce;
 	dna_[ATTRACTIONTOSHARK] = attractionToShark;
 	dna_[ATTRACTIONTOBOAT] = attractionToBoat;
 
@@ -57,7 +58,7 @@ void pig::act(delta_time dt) {
 		}
 
 		move(velocity);
-		die();
+		handleCollision();
 	}
 }
 
@@ -77,11 +78,11 @@ void pig::die()
 {
 	for (auto i = begin_collision();i != end_collision(); ++i) {
 		actor *ptr = &(*i);
-		if (auto b = dynamic_cast<boat*>(ptr); b) {
+		if (dynamic_cast<boat*>(ptr)) {
 			alive_ = false;
 			//drawable_.set_tint(kmint::graphics::colors::black);
 		}
-		else if (auto s = dynamic_cast<shark*>(ptr);s)
+		else if (dynamic_cast<shark*>(ptr))
 		{
 			alive_ = false;
 			//drawable_.set_tint(kmint::graphics::colors::black);
@@ -113,15 +114,26 @@ std::vector<pig*> pig::getNeighbours() {
 void pig::handleCollision() {
 	for (auto i = begin_collision();i != end_collision(); ++i) {
 		actor *ptr = &(*i);
-		auto & toVector = location() - ptr->location();
+		if (dynamic_cast<boat*>(ptr)) {
+			alive_ = false;
+			//drawable_.set_tint(kmint::graphics::colors::black);
+		}
+		else if (dynamic_cast<shark*>(ptr))
+		{
+			alive_ = false;
+			//drawable_.set_tint(kmint::graphics::colors::black);
+		}
+		else if (dynamic_cast<wall*>(ptr)) {
+			auto toVector = location() - ptr->location();
 
-		const auto & k = num_colliding_actors();
-		double distance = 0;
-		const auto & toVectorLength = toVector.x() * toVector.x() + toVector.y() * toVector.y();
-		if (toVectorLength > 0) {
-			distance = std::sqrt(toVectorLength);
-			double overlap = (this->radius() + ptr->radius()) - distance;
-			move(toVector / distance * overlap);
+			const auto & k = num_colliding_actors();
+			double distance = 0;
+			const auto & toVectorLength = toVector.x() * toVector.x() + toVector.y() * toVector.y();
+			if (toVectorLength > 0) {
+				distance = std::sqrt(toVectorLength);
+				const double overlap = (this->radius() + ptr->radius()) - distance;
+				move(toVector / distance * overlap);
+			}
 		}
 	}
 }

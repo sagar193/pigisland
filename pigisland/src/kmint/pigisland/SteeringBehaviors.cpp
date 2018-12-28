@@ -15,12 +15,12 @@ namespace kmint {
 		{
 			auto dna = pig.getDNA();
 			auto wander = CalculateWanderForces(pig)*dna[pig::Forces::WANDER];
-			auto cohession = CalculateCohesionForces(pig)*dna[pig::Forces::COHESSION];
-			auto seperation = CalculateSeparationForces(pig)*dna[pig::Forces::SEPARATION];
-			auto alignment = CalculateAlignmentForces(pig)*dna[pig::Forces::ALLIGNMENT];
+			auto cohesion = CalculateCohesionForces(pig)*dna[pig::Forces::COHESION];
+			auto separation = CalculateSeparationForces(pig)*dna[pig::Forces::SEPARATION];
+			auto alignment = CalculateAlignmentForces(pig)*dna[pig::Forces::ALIGNMENT];
 			auto aToBoat = CalculateAttractionToBoat(pig)*dna[pig::Forces::ATTRACTIONTOBOAT];
 			auto aToShark = CalculateAttractionToShark(pig)*dna[pig::Forces::ATTRACTIONTOSHARK];
-			auto totalForce = wander + cohession + seperation + alignment + aToBoat + aToShark;
+			auto totalForce = wander + cohesion + separation + alignment + aToBoat + aToShark;
 			return totalForce;
 		}
 		
