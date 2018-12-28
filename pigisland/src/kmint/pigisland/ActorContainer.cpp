@@ -10,7 +10,7 @@ ActorContainer::ActorContainer(kmint::map::map_graph &g, play::stage& s):
 	myShark = &(s.build_actor<pigisland::shark>(_g));
 	myBoat = &(s.build_actor<pigisland::boat>(_g));
 	for (int i = 0; i < 100; ++i) {
-		pigVector.push_back(&(s.build_actor<pigisland::pig>(math::vector2d(i * 10.0f, i * 6.0f), _g, *myShark, *myBoat)));
+		pigVector.push_back(&(s.build_actor<pigisland::pig>(math::vector2d(i * 10.0f, i * 6.0f), 1, 1, 1, .05, -1, 1, _g, *myShark, *myBoat)));
 	}
 }
 
