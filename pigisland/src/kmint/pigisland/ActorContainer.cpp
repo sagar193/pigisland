@@ -17,7 +17,7 @@ ActorContainer::ActorContainer(kmint::map::map_graph &g, play::stage& s):
 void ActorContainer::spawnPigs()
 {
 	int newPigsToSpawn = spawnOldPigs();
-	///spawnNewPigs(newPigsToSpawn)
+	spawnNewPigs(newPigsToSpawn);
 }
 
 void ActorContainer::addPigReference(pig* newPig)
@@ -30,8 +30,12 @@ int const ActorContainer::spawnOldPigs()
 	int spawnLeft = 100;
 	for each (auto pigs in pigVector)
 	{
-		///if pig is alive next
-		///if pig is dead respawn, spawnLeft -1
+		if (pigs->alive())
+			continue;
+		else {
+			pigs->revive();
+			spawnLeft -= 1;
+		}
 	}
 
 	return spawnLeft;
@@ -39,7 +43,9 @@ int const ActorContainer::spawnOldPigs()
 
 void ActorContainer::spawnNewPigs(int const pigsToSpawn)
 {
-	
+	for (int i = 0; i < pigsToSpawn; ++i) {
+		pigVector.push_back(&(_s.build_actor<pigisland::pig>(math::vector2d(i * 10.0f, i * 6.0f), 1, 1, 1, .05, -1, 1, _g, *myShark, *myBoat)));
+	}
 }
 
 std::vector<pig*> ActorContainer::getAllAlive() const

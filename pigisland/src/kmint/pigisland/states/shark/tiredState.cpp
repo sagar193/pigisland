@@ -15,7 +15,7 @@ tiredState::tiredState(shark & shark) :_shark(shark)
 void tiredState::act()
 {
 	if (_shark.node().node_id() == _shark.get_resting_place()->node_id()) {
-		_shark.setEnergy(_shark.get_energy() + 1);
+		_shark.setEnergy(+ 1);
 		if (_shark.get_energy() == 100) {
 			_shark.setState(shark::WANDER_STATE);
 		}

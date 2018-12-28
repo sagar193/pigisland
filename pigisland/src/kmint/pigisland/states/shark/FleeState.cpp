@@ -17,6 +17,7 @@ fleeState::fleeState(kmint::pigisland::shark & shark) :_shark(shark)
 
 void fleeState::act()
 {
+	_shark.setEnergy(-1);
 	if (_fleeCounter == 0) {
 		_shark.setState(shark::WANDER_STATE);
 		_fleeCounter = 10;

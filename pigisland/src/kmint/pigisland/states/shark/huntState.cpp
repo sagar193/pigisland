@@ -15,6 +15,7 @@ huntState::huntState(shark & shark) :_shark(shark)
 
 void huntState::act()
 {
+	_shark.setEnergy(-1);
 	pig* closestPig;
 	double closestPigDistance = 99999;
 

@@ -126,7 +126,10 @@ void pig::handleCollision() {
 	}
 }
 
-
+void pig::revive()
+{
+	alive_ = true;
+}
 
 
 
