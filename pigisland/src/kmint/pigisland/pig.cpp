@@ -131,25 +131,25 @@ void pig::checkCollision() {
 			case wall::NORTH:
 				if(location().y() > w->location().y())
 				{
-					move(math::vector2d(0, -2));
+					move(math::vector2d(0, -1* maxSpeed));
 				}
 				break;
 			case wall::SOUTH:
 				if (location().y() < w->location().y())
 				{
-					move(math::vector2d(0, 2));
+					move(math::vector2d(0, maxSpeed));
 				}
 				break;
 			case wall::WEST:
 				if (location().x() > w->location().x())
 				{
-					move(math::vector2d(-2, 0));
+					move(math::vector2d(-1* maxSpeed, 0));
 				}
 				break;
 			case wall::EAST:
 				if (location().x() < w->location().x())
 				{
-					move(math::vector2d(2, 0));
+					move(math::vector2d(maxSpeed, 0));
 				}
 				break;
 			}
