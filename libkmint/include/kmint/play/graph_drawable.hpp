@@ -12,6 +12,8 @@ namespace kmint::play {
 
 class actor;
 
+/*! \brief A drawable that knows how to render a graph
+ */
 template <typename Graph> class graph_drawable : public ui::drawable {
 public:
   graph_drawable(Graph const &g)
@@ -29,10 +31,7 @@ public:
     // draw nodes
     // f.render_color(node_color);
     for (auto const &node : *graph_) {
-      auto color =
-          graphics::color::from_hsv(120 * (1.f - normalize(node[0].weight())),
-                                    node.tagged() ? 0.5f : 1.f, 1.f);
-      f.draw_rectangle(node.location(), node_size, color);
+      f.draw_rectangle(node.location(), node_size, color_for(node));
     }
   }
 
@@ -44,6 +43,18 @@ private:
   float normalize(float weight) const noexcept {
     auto[min, max] = weight_range_;
     return (weight - min) / (max - min);
+  }
+  graphics::color color_for(typename Graph::node_type const &node) const {
+    auto tag = node.tag();
+    auto h = 120.f * (1.f - normalize(node[0].weight()));
+    auto s = 1.f;
+    auto v = 1.f;
+    if (tag == graph::node_tag::normal) {
+      v = 0.5f;
+    } else if (tag == graph::node_tag::visited) {
+      s = 0.3;
+    }
+    return graphics::color::from_hsv(h, s, v);
   }
   Graph const *graph_;
   std::pair<float, float> weight_range_;

@@ -70,12 +70,12 @@ void pig::die()
 		kmint::play::actor *ptr = &(*i);
 		if (auto b = dynamic_cast<kmint::pigisland::boat*>(ptr); b) {
 			alive_ = false;
-			drawable_.set_tint(kmint::graphics::colors::black);
+			//drawable_.set_tint(kmint::graphics::colors::black);
 		}
 		else if (auto s = dynamic_cast<kmint::pigisland::shark*>(ptr);s)
 		{
 			alive_ = false;
-			drawable_.set_tint(kmint::graphics::colors::black);
+			//drawable_.set_tint(kmint::graphics::colors::black);
 		}
 	}
 }

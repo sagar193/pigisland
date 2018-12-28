@@ -72,7 +72,7 @@ private:
   void handleCollision();
 
   double mass = 1;
-  double maxSpeed = 1;
+  double maxSpeed = 1.5;
   double maxForce = 1;
   double maxTurnRate = 1;
   
@@ -83,7 +83,7 @@ private:
   double alignmentForce = 1;
   double wanderForce = 1;
   double cohessionForce = .05;
-  double seperationForce = 0.001;
+  double seperationForce = 1;
   double attractionToShark = 1;
   double attractionToBoat = 1;
 

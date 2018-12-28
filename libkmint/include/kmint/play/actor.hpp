@@ -17,6 +17,13 @@ namespace kmint::play {
 
 using actor_id = std::size_t;
 
+/*! \brief Base class for all actors on the stage.
+ *
+ * This class provides the interface and some state that is common
+ * to all actors that may interact on a stage.
+ *
+ * Actors should not be constructed directly but rather through \ref stage::build_actor
+ */
 class actor {
 public:
   actor() = default;
@@ -28,7 +35,14 @@ public:
   actor &operator=(const actor &) = delete;
   actor &operator=(actor &&) = delete;
 
-  virtual void act(delta_time /*dt*/) {}
+  /*!
+   * Called every tick
+   * \param dt the time that has passed since the previous tick
+   */
+  virtual void act(delta_time dt) {}
+  /*!
+   * Returns a drawable that determines how this actor is drawn
+   */
   virtual const ui::drawable &drawable() const = 0;
   /*!
    * Checks if the actor must be drawn.
@@ -36,7 +50,8 @@ public:
    * This determines if an actor must be drawn in a frame. If this function
    * returns false, the drawable method should not be called.
    *
-   * \return true if the actor must be drawn in the next frame. False otherwise.
+   
+* \return true if the actor must be drawn in the next frame. False otherwise.
    */
   virtual bool must_draw() const { return true; }
   virtual math::vector2d location() const = 0;
@@ -96,10 +111,23 @@ public:
     }
   }
 
+  /*! \brief Registers an actor in the collision set.
+   *
+   * This method registers another actor in this actor's collision set.
+   * \param p The actor with which this actor is colliding
+   */
   void register_collision(actor &p);
+  /*! \brief Registers an actor in the perceived set.
+   *
+   * \param p The actor that this actor is perceiving
+   */
   void register_perceived(actor &p);
 
+  /*! \brief Clears the collision set
+   */
   void empty_collisions() { collision_set_.clear(); }
+  /*! \brief Clears the perceived set
+   */
   void empty_perceived() { perceived_set_.clear(); }
   using interaction_iterator =
       util::wrapped_iterator<actor, typename std::vector<actor *>::iterator>;
@@ -107,58 +135,118 @@ public:
       util::wrapped_iterator<actor const,
                              typename std::vector<actor *>::const_iterator>;
 
+  /*! \brief Gets an actor from the collision set
+   * 
+   * The index must be less than the value returned by num_colliding_actors.
+   * Otherwise, the behavior of this method is undefined.
+   *
+   * \param index A valid index into the collision set
+   */
   actor &colliding_actor(std::size_t index) {
     auto i = begin_collision() + index;
     return *i;
   }
+  /*! \brief Gets an actor from the collision set
+   * 
+   * The index must be less than the value returned by num_colliding_actors.
+   * Otherwise, the behavior of this method is undefined.
+   *
+   * \param index A valid index into the collision set
+   */
   actor const &colliding_actor(std::size_t index) const {
     auto i = begin_collision() + index;
     return *i;
   }
+  /*! \brief Gets the number of actors in the collision set
+   */
   std::size_t num_colliding_actors() const {
     return end_collision() - begin_collision();
   }
+  /*! \brief Gets an iterator to the beginning of the collision set
+   *
+   * If the collision set is empty, the iterator returned is equal to
+   * that returned by end_collision()
+   */
   interaction_iterator begin_collision() {
     return util::wrap_iterator<actor>(collision_set_.begin(), deref_actor);
   }
+  /*! \brief Gets a  const iterator to the beginning of the collision set
+   *
+   * If the collision set is empty, the iterator returned is equal to
+   * that returned by end_collision()
+   */
   const_interaction_iterator begin_collision() const {
     return util::wrap_iterator<actor const>(collision_set_.begin(),
                                             deref_actor_const);
   }
 
+  /*! \brief Gets an iterator at one-past-the-end of the collision set
+   */
   interaction_iterator end_collision() {
     return util::wrap_iterator<actor>(collision_set_.end(), deref_actor);
   }
 
+  /*! \brief Gets a  const iterator at one-past-the-end of the collision set
+   */
   const_interaction_iterator end_collision() const {
     return util::wrap_iterator<actor const>(collision_set_.end(),
                                             deref_actor_const);
   }
 
+  /*! \brief Gets the number of actors in the perceived set
+   */
   std::size_t num_perceived_actors() const {
     return end_perceived() - begin_perceived();
   }
 
+  /*! \brief Gets an actor from the perceived set
+   * 
+   * The index must be less than the value returned by num_perceived_actors.
+   * Otherwise, the behavior of this method is undefined.
+   *
+   * \param index A valid index into the perceived set
+   */
   actor &perceived_actor(std::size_t index) {
     auto i = begin_perceived() + index;
     return *i;
   }
 
+  /*! \brief Gets an actor from the perceived set
+   * 
+   * The index must be less than the value returned by num_perceived_actors.
+   * Otherwise, the behavior of this method is undefined.
+   *
+   * \param index A valid index into the perceived set
+   */
   actor const &perceived_actor(std::size_t index) const {
     auto i = begin_perceived() + index;
     return *i;
   }
 
+  /*! \brief Gets an iterator to the beginning of the perceived set
+   *
+   * If the perceived set is empty, the iterator returned is equal to
+   * that returned by end_perceived()
+   */
   interaction_iterator begin_perceived() {
     return util::wrap_iterator<actor>(perceived_set_.begin(), deref_actor);
   }
+  /*! \brief Gets a  const iterator to the beginning of the perceived set
+   *
+   * If the perceived set is empty, the iterator returned is equal to
+   * that returned by end_perceived()
+   */
   const_interaction_iterator begin_perceived() const {
     return util::wrap_iterator<actor const>(perceived_set_.begin(),
                                             deref_actor_const);
   }
+  /*! \brief Gets a iterator at one-past-the-end of the collision set
+   */
   interaction_iterator end_perceived() {
     return util::wrap_iterator<actor>(perceived_set_.end(), deref_actor);
   }
+  /*! \brief Gets a const iterator at one-past-the-end of the collision set
+   */
   const_interaction_iterator end_perceived() const {
     return util::wrap_iterator<actor const>(perceived_set_.end(),
                                             deref_actor_const);

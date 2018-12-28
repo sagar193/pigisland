@@ -9,6 +9,15 @@
 
 namespace kmint::play {
 
+/*!
+ * \brief A actor that is used to draw the background
+ *
+ * A background should not interact with its environment. Its primary
+ * purpose is to return a drawable.
+ *
+ * This actor should be the first actor built on stage. Otherwise, its 
+ * drawable will obscure the underlying actors.
+ */
 class background : public static_actor {
 public:
   background(math::size field_size, graphics::image const &img)
