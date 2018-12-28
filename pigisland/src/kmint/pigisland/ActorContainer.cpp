@@ -42,5 +42,18 @@ void ActorContainer::spawnNewPigs(int const pigsToSpawn)
 	
 }
 
+std::vector<pig*> ActorContainer::getAllAlive() const
+{
+	std::vector<pig*> returnVector;
+	int spawnLeft = 100;
+	for each (auto pigs in pigVector)
+	{
+		if (pigs->alive()) {
+			returnVector.push_back(pigs);
+		}
+	}
+	return returnVector;
+}
+
 }
 }

@@ -55,6 +55,7 @@ enum Forces{
   std::map<Forces, double> getDNA() { return dna_; }
   math::vector2d getHeading() const { return heading; }
   //kmint::pigisland::DNA getDNA() const { return dna_; };
+  bool const alive() const { return alive_; }
 private:
   bool alive_ = true;
   
