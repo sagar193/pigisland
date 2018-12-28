@@ -28,45 +28,58 @@ pig::pig(math::vector2d location, kmint::map::map_graph& graph,kmint::pigisland:
 }
 
 void pig::act(delta_time dt) {
-  free_roaming_actor::act(dt);
-  
-  //Calculate forces
-  const auto& steering_force = steeringBehavior->CalculateForces(*this);
-  const auto& acceleration = steering_force / mass;
+	if (alive_) {
+		free_roaming_actor::act(dt);
 
-  //Add new acceleration to velocity
-  velocity += acceleration * to_seconds(dt);
+		//Calculate forces
+		const auto& steering_force = steeringBehavior->CalculateForces(*this);
+		const auto& acceleration = steering_force / mass;
 
-  const auto& velocity_length = (velocity.x()*velocity.x()) + (velocity.y()*velocity.y());
-  if (velocity_length > 0) {
-	  const auto newHeading = velocity/ std::sqrt(velocity_length);
-	  heading = newHeading;
-	  if (velocity_length > maxSpeed*maxSpeed) {
-		  velocity = newHeading * maxSpeed;
-	  }
-  }
-  //std::cout << velocity.x() << "    " << velocity.y() << std::endl;
-  
-  
-  move(velocity);
-  //handleCollision();
-  //handle_collisions();
+		//Add new acceleration to velocity
+		velocity += acceleration * to_seconds(dt);
+
+		const auto& velocity_length = (velocity.x()*velocity.x()) + (velocity.y()*velocity.y());
+		if (velocity_length > 0) {
+			const auto newHeading = velocity / std::sqrt(velocity_length);
+			heading = newHeading;
+			if (velocity_length > maxSpeed*maxSpeed) {
+				velocity = newHeading * maxSpeed;
+			}
+		}
+
+		move(velocity);
+		die();
+	}
 }
 
 kmint::map::map_node* const pig::getClosestNode() const {
 	double closestNodeDistance = 99999;
 	kmint::map::map_node* closestNode;
-	
 	for (kmint::map::map_node& m : _graph) {
 		if (closestNodeDistance > calculateDistance(m)) {
 			closestNodeDistance = calculateDistance(m);
 			closestNode = &m;
 		}
 	}
-	
-
 	return closestNode;
 }
+
+void pig::die()
+{
+	for (auto i = begin_collision();i != end_collision(); ++i) {
+		kmint::play::actor *ptr = &(*i);
+		if (auto b = dynamic_cast<kmint::pigisland::boat*>(ptr); b) {
+			alive_ = false;
+			drawable_.set_tint(kmint::graphics::colors::black);
+		}
+		else if (auto s = dynamic_cast<kmint::pigisland::shark*>(ptr);s)
+		{
+			alive_ = false;
+			drawable_.set_tint(kmint::graphics::colors::black);
+		}
+	}
+}
+
 
 double pig::calculateDistance(const kmint::map::map_node& mapNode) const {
 	return sqrt(pow(location().x() - mapNode.location().x(), 2) + pow(location().y() - mapNode.location().y(), 2));
