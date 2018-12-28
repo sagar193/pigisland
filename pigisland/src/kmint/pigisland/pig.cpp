@@ -58,7 +58,7 @@ void pig::act(delta_time dt) {
 		}
 
 		move(velocity);
-		handleCollision();
+		checkCollision();
 	}
 }
 
@@ -95,8 +95,8 @@ double pig::calculateDistance(const kmint::map::map_node& mapNode) const {
 	return sqrt(pow(location().x() - mapNode.location().x(), 2) + pow(location().y() - mapNode.location().y(), 2));
 }
 
-std::vector<pig*> pig::getNeighbours() {
-	std::vector<pig*> neighbours;
+const std::vector<const pig*> pig::getNeighbours() {
+	std::vector<const pig*> neighbours;
 	for (auto i = begin_perceived(); i != end_perceived(); ++i) {
 		actor *ptr = &(*i);
 		if (auto p = dynamic_cast<pig*>(ptr); p) {
@@ -111,7 +111,7 @@ std::vector<pig*> pig::getNeighbours() {
 	return neighbours;
 }
 
-void pig::handleCollision() {
+void pig::checkCollision() {
 	for (auto i = begin_collision();i != end_collision(); ++i) {
 		actor *ptr = &(*i);
 		if (dynamic_cast<boat*>(ptr)) {
@@ -123,9 +123,39 @@ void pig::handleCollision() {
 			alive_ = false;
 			//drawable_.set_tint(kmint::graphics::colors::black);
 		}
-		else if (dynamic_cast<wall*>(ptr)) {
+		else if (auto w = dynamic_cast<wall*>(ptr);w) {
 			auto toVector = location() - ptr->location();
+			//auto halfWidth = w->getLength() / 2.0;
+			switch (w->getFace())
+			{
+			case wall::NORTH:
+				if(location().y() > w->location().y())
+				{
+					move(math::vector2d(0, -2));
+				}
+				break;
+			case wall::SOUTH:
+				if (location().y() < w->location().y())
+				{
+					move(math::vector2d(0, 2));
+				}
+				break;
+			case wall::WEST:
+				if (location().x() > w->location().x())
+				{
+					move(math::vector2d(-2, 0));
+				}
+				break;
+			case wall::EAST:
+				if (location().x() < w->location().x())
+				{
+					move(math::vector2d(2, 0));
+				}
+				break;
+			}
 
+
+			/*
 			const auto & k = num_colliding_actors();
 			double distance = 0;
 			const auto & toVectorLength = toVector.x() * toVector.x() + toVector.y() * toVector.y();
@@ -133,7 +163,7 @@ void pig::handleCollision() {
 				distance = std::sqrt(toVectorLength);
 				const double overlap = (this->radius() + ptr->radius()) - distance;
 				move(toVector / distance * overlap);
-			}
+			}*/
 		}
 	}
 }

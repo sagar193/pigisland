@@ -33,14 +33,14 @@ enum Forces{
   bool perceptive() const override { return alive_; }
   bool perceivable() const override { return alive_; }
   bool must_draw() const override { return alive_; }
-  scalar range_of_perception() const override { return 30.0f; }
+  scalar range_of_perception() const override { return 50.0f; }
   scalar radius() const override { return 8.0f; }
   bool incorporeal() const override { return false; }
   
 
   map::map_node* const getClosestNode() const;
 
-  std::vector<pig*> getNeighbours();
+  const std::vector<const pig*> getNeighbours();
 
   shark* getShark() const { return &shark_; }
   boat* getBoat() const { return &boat_; }
@@ -59,7 +59,8 @@ private:
   bool alive_ = true;
   
   double calculateDistance(const map::map_node& mapNode) const;
-  void handleCollision();
+  //void handleCollision(actor * collider);
+  void checkCollision();
   void die();
 
   play::image_drawable drawable_;
@@ -72,7 +73,7 @@ private:
   math::vector2d heading = math::vector2d(0,0);
   
   double mass = 1;
-  double maxSpeed = 5;
+  double maxSpeed = 1.5;
   double wanderRadius = 5;
   double wanderDistance = 1;
   double wanderJitter = .1;

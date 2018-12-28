@@ -12,9 +12,9 @@ namespace kmint {
 			math::vector2d CalculateForces(pig &pig) const;
 			math::vector2d CalculateWanderForces(pig &pig) const;
 
-			math::vector2d CalculateSeparationForces(pig &pig) const ;
-			math::vector2d CalculateAlignmentForces(pig &pig) const ;
-			math::vector2d CalculateCohesionForces(pig &pig) const ;
+			math::vector2d CalculateSeparationForces(const pig &pig,const std::vector<const pigisland::pig*>& neighbours) const ;
+			math::vector2d CalculateAlignmentForces(const pig &pig,const std::vector<const pigisland::pig*>& neighbours) const ;
+			math::vector2d CalculateCohesionForces(const pig &pig,const std::vector<const pigisland::pig*>& neighbours) const ;
 			
 			math::vector2d CalculateAttractionToShark(pig &pig) const;
 			math::vector2d CalculateAttractionToBoat(pig &pig) const;

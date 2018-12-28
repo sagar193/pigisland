@@ -31,12 +31,19 @@ int main() {
 
   
   s.build_actor<play::map_actor>(math::vector2d{ 0.f, 0.f }, map.graph());
-  for (int i = 0; i < 10; ++i) {
-	  s.build_actor<pigisland::wall>(math::vector2d{ i * 100.0f, .0f });
-	  s.build_actor<pigisland::wall>(math::vector2d{ 0.0f, i * 100.0f });
-	  s.build_actor<pigisland::wall>(math::vector2d{ i * 100.0f, 750.0f });
-	  s.build_actor<pigisland::wall>(math::vector2d{ 1000.0f, i * 100.0f });
-  }
+
+  s.build_actor<pigisland::wall>(math::vector2d{ 500.0f, 750.0f },pigisland::wall::Face::NORTH);
+  s.build_actor<pigisland::wall>(math::vector2d{ 500.0f, 20.0f }, pigisland::wall::Face::SOUTH);
+  s.build_actor<pigisland::wall>(math::vector2d{ .0f, 325.0f }, pigisland::wall::Face::EAST);
+  s.build_actor<pigisland::wall>(math::vector2d{ 1000.0f, 325.0f }, pigisland::wall::Face::WEST);
+
+	/*
+	for (int i = 0; i < 50; ++i) {
+	  s.build_actor<pigisland::wall>(math::vector2d{ i * 20.0f, .0f }, pigisland::wall::Face::NORTH);
+	  s.build_actor<pigisland::wall>(math::vector2d{ 0.0f, i * 20.0f }, pigisland::wall::Face::NORTH);
+	  s.build_actor<pigisland::wall>(math::vector2d{ i * 20.0f, 750.0f }, pigisland::wall::Face::NORTH);
+	  s.build_actor<pigisland::wall>(math::vector2d{ 1000.0f, i * 20.0f }, pigisland::wall::Face::NORTH);
+  }*/
 
 
   for (int i = 0; i < 100; ++i) {

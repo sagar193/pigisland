@@ -14,22 +14,23 @@ namespace kmint {
 		kmint::math::vector2d SteeringBehaviors::CalculateForces(pig &pig) const
 		{
 			auto dna = pig.getDNA();
+			auto others = pig.getNeighbours();
 			auto wander = CalculateWanderForces(pig)*dna[pig::Forces::WANDER];
-			auto cohesion = CalculateCohesionForces(pig)*dna[pig::Forces::COHESION];
-			auto separation = CalculateSeparationForces(pig)*dna[pig::Forces::SEPARATION];
-			auto alignment = CalculateAlignmentForces(pig)*dna[pig::Forces::ALIGNMENT];
+			auto cohesion = CalculateCohesionForces(pig,others)*dna[pig::Forces::COHESION];
+			auto separation = CalculateSeparationForces(pig, others)*dna[pig::Forces::SEPARATION];
+			auto alignment = CalculateAlignmentForces(pig,others)*dna[pig::Forces::ALIGNMENT];
 			auto aToBoat = CalculateAttractionToBoat(pig)*dna[pig::Forces::ATTRACTIONTOBOAT];
 			auto aToShark = CalculateAttractionToShark(pig)*dna[pig::Forces::ATTRACTIONTOSHARK];
 			auto totalForce = wander + cohesion + separation + alignment + aToBoat + aToShark;
 			return totalForce;
 		}
 		
-		math::vector2d SteeringBehaviors::CalculateSeparationForces(pig &pig) const
+		math::vector2d SteeringBehaviors::CalculateSeparationForces(const pig &pig,const std::vector<const pigisland::pig*>& neighbours) const
 		{
 			auto seperationVector = math::vector2d(0, 0);
-			auto neigbours = pig.getNeighbours();
+			//auto neigbours = pig.getNeighbours();
 				
-			for (const auto& neighbour : neigbours) {
+			for (const auto& neighbour : neighbours) {
 				auto toVector = pig.location() - neighbour->location();
 				const auto& toVectorLength = toVector.x() * toVector.x() + toVector.y() * toVector.y();
 				if (toVectorLength > 0) {
@@ -62,31 +63,31 @@ namespace kmint {
 		}
 
 
-		math::vector2d SteeringBehaviors::CalculateAlignmentForces(pig &pig) const
+		math::vector2d SteeringBehaviors::CalculateAlignmentForces(const pig &pig,const std::vector<const pigisland::pig*>& neighbours) const
 		{
 			auto avgHeading = math::vector2d(0, 0);//pig.location();
-			const auto& neigbours = pig.getNeighbours();
-			if (neigbours.size() > 0) {
-				for (const auto& neighbour : neigbours) {
+			//const auto& neigbours = pig.getNeighbours();
+			if (neighbours.size() > 0) {
+				for (const auto& neighbour : neighbours) {
 					avgHeading += neighbour->getHeading();
 				}
-				avgHeading /= neigbours.size();
+				avgHeading /= neighbours.size();
 				avgHeading -= pig.getHeading();
 			}
 			return avgHeading;
 		}
 
-		math::vector2d SteeringBehaviors::CalculateCohesionForces(pig &pig) const 
+		math::vector2d SteeringBehaviors::CalculateCohesionForces(const pig &pig,const std::vector<const pigisland::pig*>& neighbours) const
 		{
 			auto cohessionVector = math::vector2d(0, 0);
 			
-			auto neigbours = pig.getNeighbours();
-			if (neigbours.size() > 0) {
+			//auto neigbours = pig.getNeighbours();
+			if (neighbours.size() > 0) {
 				auto midpoint = math::vector2d(0, 0);
-				for (const auto& neighbour : neigbours) {
+				for (const auto& neighbour : neighbours) {
 					midpoint += neighbour->location();
 				}
-				midpoint /= neigbours.size();
+				midpoint /= neighbours.size();
 				cohessionVector = midpoint - pig.location();
 				//const auto& cohessionLength = cohessionVector.x() *cohessionVector.x() + cohessionVector.y()*cohessionVector.y();
 				//if (cohessionLength > 0) {
