@@ -114,6 +114,7 @@ const std::vector<const pig*> pig::getNeighbours() {
 void pig::checkCollision() {
 	for (auto i = begin_collision();i != end_collision(); ++i) {
 		actor *ptr = &(*i);
+		auto toVector = location() - ptr->location();
 		if (dynamic_cast<boat*>(ptr)) {
 			alive_ = false;
 			//drawable_.set_tint(kmint::graphics::colors::black);
@@ -124,14 +125,13 @@ void pig::checkCollision() {
 			//drawable_.set_tint(kmint::graphics::colors::black);
 		}
 		else if (auto w = dynamic_cast<wall*>(ptr);w) {
-			auto toVector = location() - ptr->location();
 			//auto halfWidth = w->getLength() / 2.0;
 			switch (w->getFace())
 			{
 			case wall::NORTH:
-				if(location().y() > w->location().y())
+				if (location().y() > w->location().y())
 				{
-					move(math::vector2d(0, -1* maxSpeed));
+					move(math::vector2d(0, -1 * maxSpeed));
 				}
 				break;
 			case wall::SOUTH:
@@ -143,7 +143,7 @@ void pig::checkCollision() {
 			case wall::WEST:
 				if (location().x() > w->location().x())
 				{
-					move(math::vector2d(-1* maxSpeed, 0));
+					move(math::vector2d(-1 * maxSpeed, 0));
 				}
 				break;
 			case wall::EAST:
@@ -153,9 +153,8 @@ void pig::checkCollision() {
 				}
 				break;
 			}
-
-
-			/*
+		}
+		else if (!dynamic_cast<pig*>(ptr)){
 			const auto & k = num_colliding_actors();
 			double distance = 0;
 			const auto & toVectorLength = toVector.x() * toVector.x() + toVector.y() * toVector.y();
@@ -163,7 +162,7 @@ void pig::checkCollision() {
 				distance = std::sqrt(toVectorLength);
 				const double overlap = (this->radius() + ptr->radius()) - distance;
 				move(toVector / distance * overlap);
-			}*/
+			}
 		}
 	}
 }
