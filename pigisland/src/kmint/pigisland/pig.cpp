@@ -11,6 +11,7 @@
 #include <iostream>
 #include <vector>
 #include "kmint/pigisland/wall.hpp"
+#include "kmint/pigisland/island.hpp"
 
 namespace kmint {
 namespace pigisland {
@@ -27,7 +28,7 @@ math::vector2d random_vector() {
 pig::pig(math::vector2d location,
 	double wanderForce, double alignmentForce, double separationForce, double cohesionForce, double attractionToShark, double attractionToBoat
 	, map::map_graph& graph, shark& shark, boat& boat)
-	: free_roaming_actor{ random_vector()/*location*/ }, drawable_{ *this, pig_image() }, _graph(graph), shark_(shark ), boat_(boat) {
+	: free_roaming_actor{ /*random_vector()*/location }, drawable_{ *this, pig_image() }, _graph(graph), shark_(shark ), boat_(boat) {
 	dna_[WANDER] = wanderForce;
 	dna_[SEPARATION] = separationForce;
 	dna_[COHESION] = cohesionForce;
@@ -154,14 +155,15 @@ void pig::checkCollision() {
 				break;
 			}
 		}
-		else if (!dynamic_cast<pig*>(ptr)){
+		else if (dynamic_cast<island*>(ptr)){
 			const auto & k = num_colliding_actors();
 			double distance = 0;
 			const auto & toVectorLength = toVector.x() * toVector.x() + toVector.y() * toVector.y();
 			if (toVectorLength > 0) {
 				distance = std::sqrt(toVectorLength);
 				const double overlap = (this->radius() + ptr->radius()) - distance;
-				move(toVector / distance * overlap);
+				auto handleVector = toVector / distance * overlap;
+				move(math::normalize(handleVector)*maxSpeed);
 			}
 		}
 	}
