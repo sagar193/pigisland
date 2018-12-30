@@ -111,6 +111,8 @@ void pig::checkCollision(delta_time dt) {
 		else if (dynamic_cast<shark*>(ptr))
 		{
 			alive_ = false;
+			eaten_ = true;
+			timeOfDeath_ = now();
 			//drawable_.set_tint(kmint::graphics::colors::black);
 		}
 		else if (auto w = dynamic_cast<wall*>(ptr);w) {

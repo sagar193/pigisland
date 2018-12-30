@@ -21,7 +21,7 @@ public:
 private:
 	std::vector<pig*> pigVector;
 	std::vector<island*> islands;
-
+	time startTime;
 	kmint::map::map_graph &_g;
 	play::stage& _s;
 	shark* myShark;

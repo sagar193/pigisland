@@ -57,13 +57,16 @@ enum Forces{
  
   std::map<Forces, double> getDNA() { return dna_; }
   //kmint::pigisland::DNA getDNA() const { return dna_; };
-  bool const alive() const { return alive_; }
+  bool alive() const { return alive_; }
+  bool eaten() const { return eaten_; }
+  time timeOfDeath() const { return timeOfDeath_; }
   void revive();
   void die();
 
 private:
   bool alive_ = true;
-  
+  bool eaten_ = false;
+  time timeOfDeath_;
   double calculateDistance(const map::map_node& mapNode) const;
   //void handleCollision(actor * collider);
   void checkCollision(delta_time dt);
@@ -78,7 +81,7 @@ private:
   math::vector2d heading_ = math::vector2d(0,0);
   
   double mass = 1;
-  double maxSpeed = .75;
+  double maxSpeed = 10;
   double wanderRadius = 5;
   double wanderDistance = 1;
   double wanderJitter = .1;

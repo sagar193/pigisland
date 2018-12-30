@@ -48,8 +48,10 @@ ActorContainer::ActorContainer(kmint::map::map_graph &g, play::stage& s):
 	islands.push_back(&(s.build_actor<pigisland::island>(math::vector2d{ 50.0f, 680.0f }, 50)));
 
 	for (int i = 0; i < 100; ++i) {
-		pigVector.push_back(&(_s.build_actor<pigisland::pig>(math::vector2d(500.0f, 00.0f), 1, 1, 1, .05, 1, -1, _g, *myShark, *myBoat)));
+		auto location = random_scalar(0, islands.size());
+		pigVector.push_back(&(_s.build_actor<pigisland::pig>(islands[location]->location(), 1, 1, 1, .05, 1, -1, _g, *myShark, *myBoat)));
 	}
+	startTime = now();
 }
 
 void ActorContainer::spawnPigs()
@@ -81,11 +83,11 @@ int const ActorContainer::spawnOldPigs()
 
 void ActorContainer::spawnNewPigs(int const pigsToSpawn)
 {	
-	
-
+	auto endTime = now() - startTime;
 	for(auto& p:pigVector)
 	{
 		//4 walls
+		p->revive();
 		int countCol = 0;
 		auto x = random_scalar(100, 924);
 		auto y = random_scalar(50, 728);
@@ -114,10 +116,21 @@ void ActorContainer::spawnNewPigs(int const pigsToSpawn)
 			}
 		}
 	}
-	//for (int i = 0; i < pigsToSpawn; ++i) {
-	//	pigVector.push_back(&(_s.build_actor<pigisland::pig>(math::vector2d(i * 10.0f, i * 6.0f), 1, 1, 1, .05, -1, 1, _g, *myShark, *myBoat)));
-	//}
-	//_s.build_actor<pigisland::boat>(_g);
+
+	int totalFitnes = 0;
+	for(auto p:pigVector)
+	{
+		if(!p->eaten())
+		{
+			totalFitnes += to_seconds(endTime);
+		} else
+		{
+			totalFitnes += p.
+		}
+	}
+
+	startTime = now();
+	
 }
 
 std::vector<pig*> ActorContainer::getAllAlive() const
