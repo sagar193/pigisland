@@ -3,6 +3,8 @@
 
 #include "kmint/play.hpp"
 #include <map>
+//#include "../../../../dependencies/SDL2/include/SDL_opengles2_gl2ext.h"
+
 //class MovingActor;
 
 namespace kmint {
@@ -37,7 +39,7 @@ enum Forces{
   scalar radius() const override { return 8.0f; }
   bool incorporeal() const override { return false; }
   math::vector2d heading() const override { return heading_; }
-  
+  void setLocation(math::vector2d newLocation) { location(newLocation); }
 
   map::map_node* const getClosestNode() const;
 

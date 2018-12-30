@@ -1,4 +1,7 @@
 #include "..\..\..\include\kmint\pigisland\ActorContainer.hpp"
+#include "../../../../libkmint/kmint_handout/libkmint/include/kmint/random.hpp"
+#include "kmint/pigisland/island.hpp"
+#include "kmint/pigisland/wall.hpp"
 
 
 namespace kmint {
@@ -9,14 +12,49 @@ ActorContainer::ActorContainer(kmint::map::map_graph &g, play::stage& s):
 {
 	myShark = &(_s.build_actor<pigisland::shark>(_g, *this));
 	myBoat = &(_s.build_actor<pigisland::boat>(_g));
+
+	//borders
+	s.build_actor<pigisland::wall>(math::vector2d{ 500.0f, 750.0f }, pigisland::wall::Face::NORTH);
+	s.build_actor<pigisland::wall>(math::vector2d{ 500.0f, 10.0f }, pigisland::wall::Face::SOUTH);
+	s.build_actor<pigisland::wall>(math::vector2d{ .0f, 325.0f }, pigisland::wall::Face::EAST);
+	s.build_actor<pigisland::wall>(math::vector2d{ 1020.0f, 325.0f }, pigisland::wall::Face::WEST);
+	
+	//right top island
+	islands.push_back(&(s.build_actor<pigisland::island>(math::vector2d{ 1020.0f, 0.0f }, 80)));
+	islands.push_back(&(s.build_actor<pigisland::island>(math::vector2d{ 990.0f, 0.0f }, 80)));
+	islands.push_back(&(s.build_actor<pigisland::island>(math::vector2d{ 1020.0f, 100.0f }, 30)));
+	islands.push_back(&(s.build_actor<pigisland::island>(math::vector2d{ 1020.0f, 50.0f }, 30)));
+	
+	//bottom right island
+	islands.push_back(&(s.build_actor<pigisland::island>(math::vector2d{ 925.0f, 750.0f }, 125)));
+	islands.push_back(&(s.build_actor<pigisland::island>(math::vector2d{ 1020.0f, 625.0f }, 50)));
+	islands.push_back(&(s.build_actor<pigisland::island>(math::vector2d{ 915.0f, 625.0f }, 30)));
+	islands.push_back(&(s.build_actor<pigisland::island>(math::vector2d{ 915.0f, 575.0f }, 30)));
+	islands.push_back(&(s.build_actor<pigisland::island>(math::vector2d{ 1020.0f, 750.0f }, 150)));
+	
+	//bottom left island
+	islands.push_back(&(s.build_actor<pigisland::island>(math::vector2d{ 125.0f, 625.0f }, 75)));
+	islands.push_back(&(s.build_actor<pigisland::island>(math::vector2d{ 175.0f, 575.0f }, 25)));
+	
+	//top left island
+	islands.push_back(&(s.build_actor<pigisland::island>(math::vector2d{ 0.0f, 0.0f }, 100)));
+	islands.push_back(&(s.build_actor<pigisland::island>(math::vector2d{ 100.0f, 0.0f }, 100)));
+	islands.push_back(&(s.build_actor<pigisland::island>(math::vector2d{ 175.0f, 45.0f }, 27)));
+	islands.push_back(&(s.build_actor<pigisland::island>(math::vector2d{ 225.0f, 45.0f }, 27)));
+	islands.push_back(&(s.build_actor<pigisland::island>(math::vector2d{ 275.0f, 45.0f }, 27)));
+	
+	//statue
+	islands.push_back(&(s.build_actor<pigisland::island>(math::vector2d{ 0.0f, 680.0f }, 50)));
+	islands.push_back(&(s.build_actor<pigisland::island>(math::vector2d{ 50.0f, 680.0f }, 50)));
+
 	for (int i = 0; i < 100; ++i) {
-		pigVector.push_back(&(_s.build_actor<pigisland::pig>(math::vector2d(500.0f, 00.0f), 1, 1, 1, 1, 1, -1, _g, *myShark, *myBoat)));
+		pigVector.push_back(&(_s.build_actor<pigisland::pig>(math::vector2d(500.0f, 00.0f), 1, 1, 1, .05, 1, -1, _g, *myShark, *myBoat)));
 	}
 }
 
 void ActorContainer::spawnPigs()
 {
-	int newPigsToSpawn = spawnOldPigs();
+	int newPigsToSpawn = 1;//spawnOldPigs();
 	spawnNewPigs(newPigsToSpawn);
 }
 
@@ -42,7 +80,40 @@ int const ActorContainer::spawnOldPigs()
 }
 
 void ActorContainer::spawnNewPigs(int const pigsToSpawn)
-{
+{	
+	
+
+	for(auto& p:pigVector)
+	{
+		//4 walls
+		int countCol = 0;
+		auto x = random_scalar(100, 924);
+		auto y = random_scalar(50, 728);
+		p->setLocation(math::vector2d(x, y));
+		for(auto island:islands)
+		{
+			if(collision(*p,*island))
+			{
+				countCol++;
+			}
+		}
+
+		//_s.act(delta_time(0));
+		while (countCol>0) {
+			countCol = 0;
+			x = random_scalar(100, 924);
+			y = random_scalar(50, 728);
+			p->setLocation(math::vector2d(x, y));
+			//_s.act(delta_time(0));
+			for (auto island : islands)
+			{
+				if (collision(*p, *island))
+				{
+					countCol++;
+				}
+			}
+		}
+	}
 	//for (int i = 0; i < pigsToSpawn; ++i) {
 	//	pigVector.push_back(&(_s.build_actor<pigisland::pig>(math::vector2d(i * 10.0f, i * 6.0f), 1, 1, 1, .05, -1, 1, _g, *myShark, *myBoat)));
 	//}

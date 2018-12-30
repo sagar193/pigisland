@@ -170,7 +170,7 @@ void pig::checkCollision(delta_time dt) {
 				//heading_ = normalize(handleVector);
 				velocity += handleVector;
 			}
-		} else
+		} /*else
 		{
 			const auto & k = num_colliding_actors();
 			double distance = 0;
@@ -183,7 +183,7 @@ void pig::checkCollision(delta_time dt) {
 				//heading_ = normalize(handleVector);
 				velocity += handleVector;
 			}
-		}
+		}*/
 	}
 }
 

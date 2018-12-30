@@ -3,6 +3,7 @@
 #include "pig.hpp"
 #include "shark.hpp"
 #include "boat.hpp"
+#include "island.hpp"
 
 namespace kmint {
 namespace pigisland {
@@ -19,6 +20,8 @@ public:
 	void newRound();
 private:
 	std::vector<pig*> pigVector;
+	std::vector<island*> islands;
+
 	kmint::map::map_graph &_g;
 	play::stage& _s;
 	shark* myShark;
