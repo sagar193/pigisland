@@ -21,7 +21,7 @@ public:
 private:
 	bool sortHelper(pig* pig2, pig* pig1);
 
-
+	int countCandidates = 50;
 	std::vector<pig*> pigVector;
 	std::vector<island*> islands;
 	time startTime;

@@ -82,6 +82,8 @@ void pig::die()
 }
 
 
+
+
 double pig::calculateDistance(const kmint::map::map_node& mapNode) const {
 	return sqrt(pow(location().x() - mapNode.location().x(), 2) + pow(location().y() - mapNode.location().y(), 2));
 }
@@ -111,7 +113,7 @@ void pig::checkCollision(delta_time dt) {
 			//drawable_.set_tint(kmint::graphics::colors::black);
 		}
 		
-		else if (auto w = dynamic_cast<wall*>(ptr);w) {
+		else if (const auto w = dynamic_cast<wall*>(ptr);w) {
 			//auto halfWidth = w->getLength() / 2.0;
 			switch (w->getFace())
 			{
@@ -174,10 +176,16 @@ void pig::checkCollision(delta_time dt) {
 	}
 }
 
-void pig::revive()
+void pig::revive(math::vector2d newLocation,double alignment, double cohesion, double separation, double attractionToShark, double attractionToBoat)
 {
 	alive_ = true;
 	timeAlive_ = delta_time(0);
+	dna_[ALIGNMENT] = alignment;
+	dna_[COHESION] = cohesion;
+	dna_[SEPARATION] = separation;
+	dna_[ATTRACTIONTOSHARK] = attractionToShark;
+	dna_[ATTRACTIONTOBOAT] = attractionToBoat;
+	location(newLocation);
 }
 
 

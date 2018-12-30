@@ -19,7 +19,7 @@ void wanderState::act()
 {
 	_shark.setEnergy(-1);
 	_shark.node(random_adjacent_node(_shark.node()));
-	for (auto i = _shark.begin_perceived(); i != _shark.end_perceived(); i++) {
+	for (auto i = _shark.begin_perceived(); i != _shark.end_perceived(); ++i) {
 		kmint::play::actor *ptr = &(*i);
 		if (auto p = dynamic_cast<kmint::pigisland::boat*>(ptr); p)
 		{
@@ -27,7 +27,7 @@ void wanderState::act()
 			return;
 		}
 	}
-	for (auto i = _shark.begin_perceived(); i != _shark.begin_perceived(); ++i) {
+	for (auto i = _shark.begin_perceived(); i != _shark.end_perceived(); ++i) {
 		play::actor *ptr = &(*i);
 		if (auto p = dynamic_cast<pig*>(ptr); ptr)
 		{

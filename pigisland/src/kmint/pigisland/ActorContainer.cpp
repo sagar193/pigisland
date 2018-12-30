@@ -74,7 +74,7 @@ int const ActorContainer::spawnOldPigs()
 		if (pigs->alive())
 			continue;
 		else {
-			pigs->revive();
+			//pigs->revive();
 			spawnLeft -= 1;
 		}
 	}
@@ -125,19 +125,18 @@ void ActorContainer::spawnNewPigs(int const pigsToSpawn)
 		}
 	}
 
-	//float totalFitnes = 0;
-	//for(auto p:pigVector)
-	//{
-		//totalFitnes += to_seconds(p->timeAlive());
-		//p->revive();
-	//}
+	std::vector<pig*> candidates;
 
 	std::sort(pigVector.begin(), pigVector.end(), [](pig* pig1, pig* pig2) {return pig1->timeAlive() > pig2->timeAlive();});
 	for (auto p : pigVector)
 	{
-		//totalFitnes += to_seconds(p->timeAlive());
-		p->revive();
+		if(candidates.size()<countCandidates)
+		{
+			candidates.push_back(p);
+		}
 	}
+
+
 
 	startTime = now();
 	

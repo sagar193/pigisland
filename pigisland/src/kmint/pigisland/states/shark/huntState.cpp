@@ -20,7 +20,7 @@ void huntState::act()
 
 	for (auto i = _shark.begin_collision(); i != _shark.end_collision(); ++i) {
 		play::actor *ptr = &(*i);
-		if (auto p = dynamic_cast<pig*>(ptr); ptr)
+		if (auto p = dynamic_cast<pig*>(ptr); p)
 		{
 			p->die();
 		}

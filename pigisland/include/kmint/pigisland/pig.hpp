@@ -56,11 +56,12 @@ enum Forces{
   double getWanderJitter() const { return wanderJitter; }
  
   std::map<Forces, double> getDNA() { return dna_; }
-  //kmint::pigisland::DNA getDNA() const { return dna_; };
+  //void setDna(double alignment, double cohesion, double separation, double attractionToShark, double attractionToBoat);
+  
   bool alive() const { return alive_; }
   bool caught() const { return caught_; }
   delta_time timeAlive() const { return timeAlive_; }
-  void revive();
+  void revive(math::vector2d newLocation,double alignment, double cohesion, double separation, double attractionToShark, double attractionToBoat);
   void die();
 
 private:
@@ -81,7 +82,7 @@ private:
   math::vector2d heading_ = math::vector2d(0,0);
   
   double mass = 1;
-  double maxSpeed = 10;
+  double maxSpeed = 5;
   double wanderRadius = 5;
   double wanderDistance = 1;
   double wanderJitter = .1;
