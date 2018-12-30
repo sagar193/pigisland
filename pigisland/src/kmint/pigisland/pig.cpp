@@ -76,18 +76,7 @@ map::map_node* const pig::getClosestNode() const {
 
 void pig::die()
 {
-	for (auto i = begin_collision();i != end_collision(); ++i) {
-		actor *ptr = &(*i);
-		if (dynamic_cast<boat*>(ptr)) {
-			alive_ = false;
-			//drawable_.set_tint(kmint::graphics::colors::black);
-		}
-		else if (dynamic_cast<shark*>(ptr))
-		{
-			alive_ = false;
-			//drawable_.set_tint(kmint::graphics::colors::black);
-		}
-	}
+	alive_ = false;
 }
 
 

@@ -22,7 +22,7 @@ public:
   shark(kmint::map::map_graph &g, ActorContainer& actorContainer);
   ui::drawable const &drawable() const override { return drawable_; }
   bool incorporeal() const override { return false; }
-  scalar radius() const override { return 16.0; }
+  scalar radius() const override { return 16.0f; }
   void act(delta_time dt) override;
   bool perceptive() const override { return true; };
   scalar range_of_perception() const override { return 100.0f; };

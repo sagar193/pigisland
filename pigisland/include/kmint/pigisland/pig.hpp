@@ -59,6 +59,7 @@ enum Forces{
   //kmint::pigisland::DNA getDNA() const { return dna_; };
   bool const alive() const { return alive_; }
   void revive();
+  void die();
 
 private:
   bool alive_ = true;
@@ -66,10 +67,7 @@ private:
   double calculateDistance(const map::map_node& mapNode) const;
   //void handleCollision(actor * collider);
   void checkCollision(delta_time dt);
-
-
-  void die();
-
+  
   play::image_drawable drawable_;
   map::map_graph& _graph;
 

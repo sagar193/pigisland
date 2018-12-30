@@ -6,6 +6,7 @@
 #include "kmint/play.hpp"
 #include "kmint/pigisland/shark.hpp"
 #include "kmint/pigisland/boat.hpp"
+#include "kmint/pigisland/pig.hpp"
 #include "kmint/pigisland/node_algorithm.hpp"
 
 namespace kmint {
@@ -26,8 +27,12 @@ void wanderState::act()
 			return;
 		}
 	}
-	if (_shark.begin_perceived() != _shark.end_perceived()) {
-		_shark.setState(shark::HUNT_STATE);
+	for (auto i = _shark.begin_perceived(); i != _shark.begin_perceived(); ++i) {
+		play::actor *ptr = &(*i);
+		if (auto p = dynamic_cast<pig*>(ptr); ptr)
+		{
+			_shark.setState(shark::HUNT_STATE);
+		}
 	}
 }
 }}
