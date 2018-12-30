@@ -35,12 +35,13 @@ pig::pig(math::vector2d location,
 	dna_[ALIGNMENT] = alignmentForce;
 	dna_[ATTRACTIONTOSHARK] = attractionToShark;
 	dna_[ATTRACTIONTOBOAT] = attractionToBoat;
-
+	timeAlive_ = delta_time(0);
 }
 
 void pig::act(delta_time dt) {
 	if (alive_) {
 		free_roaming_actor::act(dt);
+		timeAlive_ += dt;
 		checkCollision(dt);
 		//Calculate forces
 		const auto& steering_force = steeringBehavior->CalculateForces(*this);
@@ -77,6 +78,7 @@ map::map_node* const pig::getClosestNode() const {
 void pig::die()
 {
 	alive_ = false;
+	caught_ = true;
 }
 
 
@@ -105,16 +107,10 @@ void pig::checkCollision(delta_time dt) {
 		actor *ptr = &(*i);
 		auto toVector = location() - ptr->location();
 		if (dynamic_cast<boat*>(ptr)) {
-			alive_ = false;
+			caught_ = true;
 			//drawable_.set_tint(kmint::graphics::colors::black);
 		}
-		else if (dynamic_cast<shark*>(ptr))
-		{
-			alive_ = false;
-			eaten_ = true;
-			timeOfDeath_ = now();
-			//drawable_.set_tint(kmint::graphics::colors::black);
-		}
+		
 		else if (auto w = dynamic_cast<wall*>(ptr);w) {
 			//auto halfWidth = w->getLength() / 2.0;
 			switch (w->getFace())
@@ -181,6 +177,7 @@ void pig::checkCollision(delta_time dt) {
 void pig::revive()
 {
 	alive_ = true;
+	timeAlive_ = delta_time(0);
 }
 
 

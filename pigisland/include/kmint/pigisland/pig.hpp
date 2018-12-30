@@ -32,9 +32,9 @@ enum Forces{
   const ui::drawable &drawable() const override { return drawable_; }
   void move(math::vector2d delta) { location(location() + delta); }
   void act(delta_time dt) override;
-  bool perceptive() const override { return alive_; }
-  bool perceivable() const override { return alive_; }
-  bool must_draw() const override { return alive_; }
+  bool perceptive() const override { return !caught_; }
+  bool perceivable() const override { return !caught_; }
+  bool must_draw() const override { return !caught_; }
   scalar range_of_perception() const override { return 50.0f; }
   scalar radius() const override { return 8.0f; }
   bool incorporeal() const override { return false; }
@@ -58,15 +58,15 @@ enum Forces{
   std::map<Forces, double> getDNA() { return dna_; }
   //kmint::pigisland::DNA getDNA() const { return dna_; };
   bool alive() const { return alive_; }
-  bool eaten() const { return eaten_; }
-  time timeOfDeath() const { return timeOfDeath_; }
+  bool caught() const { return caught_; }
+  delta_time timeAlive() const { return timeAlive_; }
   void revive();
   void die();
 
 private:
+  bool caught_ = false;
   bool alive_ = true;
-  bool eaten_ = false;
-  time timeOfDeath_;
+  delta_time timeAlive_;
   double calculateDistance(const map::map_node& mapNode) const;
   //void handleCollision(actor * collider);
   void checkCollision(delta_time dt);

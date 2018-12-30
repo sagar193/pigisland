@@ -2,6 +2,7 @@
 #include "../../../../libkmint/kmint_handout/libkmint/include/kmint/random.hpp"
 #include "kmint/pigisland/island.hpp"
 #include "kmint/pigisland/wall.hpp"
+#include <algorithm>
 
 
 namespace kmint {
@@ -81,13 +82,20 @@ int const ActorContainer::spawnOldPigs()
 	return spawnLeft;
 }
 
+bool ActorContainer::sortHelper(pig* pig1,pig* pig2)
+{
+	return pig1->timeAlive() > pig2->timeAlive();
+}
+
+
+
 void ActorContainer::spawnNewPigs(int const pigsToSpawn)
 {	
 	auto endTime = now() - startTime;
 	for(auto& p:pigVector)
 	{
 		//4 walls
-		p->revive();
+		//p->revive();
 		int countCol = 0;
 		auto x = random_scalar(100, 924);
 		auto y = random_scalar(50, 728);
@@ -117,16 +125,18 @@ void ActorContainer::spawnNewPigs(int const pigsToSpawn)
 		}
 	}
 
-	int totalFitnes = 0;
-	for(auto p:pigVector)
+	//float totalFitnes = 0;
+	//for(auto p:pigVector)
+	//{
+		//totalFitnes += to_seconds(p->timeAlive());
+		//p->revive();
+	//}
+
+	std::sort(pigVector.begin(), pigVector.end(), [](pig* pig1, pig* pig2) {return pig1->timeAlive() > pig2->timeAlive();});
+	for (auto p : pigVector)
 	{
-		if(!p->eaten())
-		{
-			totalFitnes += to_seconds(endTime);
-		} else
-		{
-			totalFitnes += p.
-		}
+		//totalFitnes += to_seconds(p->timeAlive());
+		p->revive();
 	}
 
 	startTime = now();

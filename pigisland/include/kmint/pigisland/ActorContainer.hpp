@@ -19,6 +19,9 @@ public:
 	void addPigReference(pig* newPig);
 	void newRound();
 private:
+	bool sortHelper(pig* pig2, pig* pig1);
+
+
 	std::vector<pig*> pigVector;
 	std::vector<island*> islands;
 	time startTime;
