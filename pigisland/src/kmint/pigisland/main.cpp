@@ -37,6 +37,7 @@ int main() {
     // sinds de vorige keer dat deze lambda werd aangeroepen
     // loop controls is een object met eigenschappen die je kunt gebruiken om de
     // main-loop aan te sturen.
+	  //s.build_actor<pigisland::boat>(map.graph());
 
     for (ui::events::event &e : event_source) {
       // event heeft een methode handle_quit die controleert

@@ -21,7 +21,7 @@ namespace pigisland {
 {
 	RegisterStates();
 	setState(WANDER_STATE);
-	_energy = 3;
+	_energy = 100;
 }
 
 void shark::act(delta_time dt) {

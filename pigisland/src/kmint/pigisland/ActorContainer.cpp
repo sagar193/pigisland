@@ -46,8 +46,7 @@ void ActorContainer::spawnNewPigs(int const pigsToSpawn)
 	//for (int i = 0; i < pigsToSpawn; ++i) {
 	//	pigVector.push_back(&(_s.build_actor<pigisland::pig>(math::vector2d(i * 10.0f, i * 6.0f), 1, 1, 1, .05, -1, 1, _g, *myShark, *myBoat)));
 	//}
-	_s.build_actor<pigisland::boat>(_g);
-	_s.build_actor<pigisland::boat>(_g);
+	//_s.build_actor<pigisland::boat>(_g);
 }
 
 std::vector<pig*> ActorContainer::getAllAlive() const
