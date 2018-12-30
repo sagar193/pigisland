@@ -8,6 +8,7 @@
 
 #include "kmint/play.hpp"
 #include "kmint/ui.hpp"
+#include "kmint/pigisland/ActorContainer.hpp"
 
 
 using namespace kmint;
@@ -25,12 +26,7 @@ int main() {
   map.graph()[0].tagged(true);
   s.build_actor<play::background>(math::size(1024, 768),
                                   graphics::image{map.background_image()});
-
-  
-
-  auto& shark = s.build_actor<pigisland::shark>(map.graph());
-  auto& boat = s.build_actor<pigisland::boat>(map.graph());
-
+  kmint::pigisland::ActorContainer actorContainer(map.graph(), s);
   
   s.build_actor<play::map_actor>(math::vector2d{ 0.f, 0.f }, map.graph());
 
@@ -67,15 +63,6 @@ int main() {
   //statue
   s.build_actor<pigisland::island>(math::vector2d{ 0.0f, 680.0f }, 50);
   s.build_actor<pigisland::island>(math::vector2d{ 50.0f, 680.0f }, 50);
-
-
-
-
-
-  for (int i = 0; i < 100; ++i) {
-    //s.build_actor<pigisland::pig>(math::vector2d(i * 10.0f, i * 6.0f),1,1,1,.05,-1,1, map.graph(),shark,boat);
-	s.build_actor<pigisland::pig>(math::vector2d(500.0f, 00.0f), 1, 1, 1, 1, 1, -1, map.graph(), shark, boat);
-  }
   
 
   // Maak een event_source aan (hieruit kun je alle events halen, zoals
@@ -88,6 +75,7 @@ int main() {
     // sinds de vorige keer dat deze lambda werd aangeroepen
     // loop controls is een object met eigenschappen die je kunt gebruiken om de
     // main-loop aan te sturen.
+	  //s.build_actor<pigisland::boat>(map.graph());
 
     for (ui::events::event &e : event_source) {
       // event heeft een methode handle_quit die controleert

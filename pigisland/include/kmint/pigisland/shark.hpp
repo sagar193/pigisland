@@ -9,6 +9,7 @@
 
 namespace kmint {
 namespace pigisland {
+class ActorContainer;
 class shark : public play::map_bound_actor {
 public:
 	enum STATE_NAMES {
@@ -18,7 +19,7 @@ public:
 		TIRED_STATE
 	};
 
-  shark(kmint::map::map_graph &g);
+  shark(kmint::map::map_graph &g, ActorContainer& actorContainer);
   ui::drawable const &drawable() const override { return drawable_; }
   bool incorporeal() const override { return false; }
   scalar radius() const override { return 16.0; }
@@ -28,15 +29,17 @@ public:
   kmint::map::map_graph *_g() { return map_; };
   const kmint::map::map_node* get_resting_place() { return resting_place_; };
   const int get_energy() { return _energy; };
-  void setEnergy(int energy) { _energy = energy; };
+  void setEnergy(int energy) { _energy += energy; };
 
   void setState(STATE_NAMES state);
+  ActorContainer* actorContainer() { return &_actorContainer; }
 private:
   play::image_drawable drawable_;
   map::map_graph *map_;
   map::map_node const *resting_place_;
   delta_time t_since_move_{};
   int _energy;
+  ActorContainer& _actorContainer;
 
   state* currentState;
   std::map<STATE_NAMES, std::unique_ptr<state>> States;

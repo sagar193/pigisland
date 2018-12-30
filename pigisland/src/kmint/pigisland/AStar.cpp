@@ -20,6 +20,12 @@ std::vector<const kmint::map::map_node*> aStar::FindShortestPath(const kmint::ma
 	std::vector<const kmint::map::map_node*> que;
 	std::vector<const kmint::map::map_node*> visited;
 
+	if (startNode.node_id() == endNode.node_id())
+	{
+		visited.push_back(&startNode);
+		return visited;
+	}
+
 	cost[&startNode] = 0;
 	heuristicCost[&startNode] = calculateDistance(startNode, endNode);
 	que.push_back(&startNode);
@@ -41,9 +47,7 @@ std::vector<const kmint::map::map_node*> aStar::FindShortestPath(const kmint::ma
 			auto toVertex = &edge.to();
 			bool notInVisited = std::find(visited.begin(), visited.end(), toVertex) == visited.end();
 			bool notInQue = std::find(que.begin(), que.end(), toVertex) == que.end();
-
-			//TODO add A* weight
-
+			
 			if (notInVisited && notInQue) {
 				que.push_back(toVertex);
 			}

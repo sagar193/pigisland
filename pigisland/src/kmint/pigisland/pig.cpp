@@ -187,7 +187,10 @@ void pig::checkCollision(delta_time dt) {
 	}
 }
 
-
+void pig::revive()
+{
+	alive_ = true;
+}
 
 
 

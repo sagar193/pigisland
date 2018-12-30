@@ -89,7 +89,6 @@ namespace kmint {
 					avgHeading += neighbour->heading();
 				}
 				avgHeading /= neighbours.size();
-				avgHeading -= pig.getHeading();
 			}
 			return avgHeading;
 		}

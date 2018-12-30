@@ -54,6 +54,9 @@ enum Forces{
   double getWanderJitter() const { return wanderJitter; }
  
   std::map<Forces, double> getDNA() { return dna_; }
+  //kmint::pigisland::DNA getDNA() const { return dna_; };
+  bool const alive() const { return alive_; }
+  void revive();
   math::vector2d getHeading() const { return heading_; }
 
 private:

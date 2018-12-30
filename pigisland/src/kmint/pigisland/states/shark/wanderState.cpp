@@ -16,6 +16,7 @@ wanderState::wanderState(shark & shark) :_shark(shark)
 
 void wanderState::act()
 {
+	_shark.setEnergy(-1);
 	_shark.node(random_adjacent_node(_shark.node()));
 	for (auto i = _shark.begin_perceived(); i != _shark.end_perceived(); i++) {
 		kmint::play::actor *ptr = &(*i);

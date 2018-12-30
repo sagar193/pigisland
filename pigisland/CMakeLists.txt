@@ -26,6 +26,7 @@ add_executable(pigisland
   src/kmint/pigisland/states/boat/boatRepairState.cpp
   src/kmint/pigisland/states/boat/boatWanderState.cpp
   src/kmint/pigisland/aStar.cpp
+  src/kmint/pigisland/ActorContainer.cpp
   )
 
 target_compile_features(pigisland PUBLIC cxx_std_17)
