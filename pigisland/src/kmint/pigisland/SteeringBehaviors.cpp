@@ -3,7 +3,8 @@
 #include "kmint/pigisland/boat.hpp"
 #include <random>
 #include <cmath>
-
+#include "../../../../libkmint/kmint_handout/libkmint/include/kmint/play/actor.hpp"
+#include "kmint/pigisland/island.hpp"
 
 
 namespace kmint {
@@ -14,18 +15,34 @@ namespace kmint {
 		kmint::math::vector2d SteeringBehaviors::CalculateForces(pig &pig) const
 		{
 			auto dna = pig.getDNA();
-			auto others = pig.getNeighbours();
-			auto wander = CalculateWanderForces(pig)*dna[pig::Forces::WANDER];
-			auto cohesion = CalculateCohesionForces(pig,others)*dna[pig::Forces::COHESION];
-			auto separation = CalculateSeparationForces(pig, others)*dna[pig::Forces::SEPARATION];
-			auto alignment = CalculateAlignmentForces(pig,others)*dna[pig::Forces::ALIGNMENT];
-			auto aToBoat = CalculateAttractionToBoat(pig)*dna[pig::Forces::ATTRACTIONTOBOAT];
-			auto aToShark = CalculateAttractionToShark(pig)*dna[pig::Forces::ATTRACTIONTOSHARK];
-			auto totalForce = wander + cohesion + separation + alignment + aToBoat + aToShark;
+			//const auto others = pig.getNeighbours();
+			std::vector<const play::actor*> others;
+			std::vector<const play::actor*> islands;
+			for(auto i = pig.begin_perceived();i!=pig.end_perceived();++i)
+			{
+				play::actor *ptr = &(*i);
+				if(dynamic_cast<pigisland::pig*>(ptr))
+				{
+					others.push_back(ptr);
+				}
+				else if(dynamic_cast<island*>(ptr))
+				{
+					islands.push_back(ptr);
+				}
+			}
+
+			const auto wander = CalculateWander(pig)*dna[pig::Forces::WANDER];
+			const auto cohesion = CalculateCohesion(pig,others)*dna[pig::Forces::COHESION];
+			const auto separation = CalculateSeparation(pig, others)*dna[pig::Forces::SEPARATION];
+			const auto alignment = CalculateAlignment(pig,others)*dna[pig::Forces::ALIGNMENT];
+			const auto aToBoat = CalculateAttractionToBoat(pig)*dna[pig::Forces::ATTRACTIONTOBOAT];
+			const auto aToShark = CalculateAttractionToShark(pig)*dna[pig::Forces::ATTRACTIONTOSHARK];
+			const auto islandAvoidance = CalculateIslandAvoidance(pig, islands);
+			const auto totalForce = wander + cohesion + separation + alignment + aToBoat + aToShark + islandAvoidance;
 			return totalForce;
 		}
 		
-		math::vector2d SteeringBehaviors::CalculateSeparationForces(const pig &pig,const std::vector<const pigisland::pig*>& neighbours) const
+		math::vector2d SteeringBehaviors::CalculateSeparation(const pig &pig,const std::vector<const play::actor*>& neighbours) const
 		{
 			auto seperationVector = math::vector2d(0, 0);
 			//auto neigbours = pig.getNeighbours();
@@ -42,7 +59,7 @@ namespace kmint {
 
 		}
 
-		math::vector2d SteeringBehaviors::CalculateWanderForces(pig &pig) const {
+		math::vector2d SteeringBehaviors::CalculateWander(pig &pig) const {
 			const auto randX = (((double)rand() / (RAND_MAX))) * 2 - 1;
 			const auto randY = (((double)rand() / (RAND_MAX))) * 2 - 1;
 			
@@ -63,13 +80,14 @@ namespace kmint {
 		}
 
 
-		math::vector2d SteeringBehaviors::CalculateAlignmentForces(const pig &pig,const std::vector<const pigisland::pig*>& neighbours) const
+		math::vector2d SteeringBehaviors::CalculateAlignment(const pig &pig,const std::vector<const play::actor*>& neighbours) const
 		{
 			auto avgHeading = math::vector2d(0, 0);//pig.location();
 			//const auto& neigbours = pig.getNeighbours();
 			if (neighbours.size() > 0) {
 				for (const auto& neighbour : neighbours) {
-					avgHeading += neighbour->getHeading();
+					
+					avgHeading += neighbour->heading();
 				}
 				avgHeading /= neighbours.size();
 				avgHeading -= pig.getHeading();
@@ -77,7 +95,7 @@ namespace kmint {
 			return avgHeading;
 		}
 
-		math::vector2d SteeringBehaviors::CalculateCohesionForces(const pig &pig,const std::vector<const pigisland::pig*>& neighbours) const
+		math::vector2d SteeringBehaviors::CalculateCohesion(const pig &pig,const std::vector<const play::actor*>& neighbours) const
 		{
 			auto cohessionVector = math::vector2d(0, 0);
 			
@@ -117,6 +135,12 @@ namespace kmint {
 			}
 			return math::vector2d(0, 0);
 		}
+
+		math::vector2d SteeringBehaviors::CalculateIslandAvoidance(const pig &pig, const std::vector<const play::actor*>& islands) const
+		{
+			return CalculateCohesion(pig, islands) * -1;
+		}
+
 
 	}
 }

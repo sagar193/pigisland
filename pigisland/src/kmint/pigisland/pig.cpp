@@ -41,7 +41,7 @@ pig::pig(math::vector2d location,
 void pig::act(delta_time dt) {
 	if (alive_) {
 		free_roaming_actor::act(dt);
-
+		checkCollision(dt);
 		//Calculate forces
 		const auto& steering_force = steeringBehavior->CalculateForces(*this);
 		const auto& acceleration = steering_force / mass;
@@ -52,14 +52,13 @@ void pig::act(delta_time dt) {
 		const auto& velocity_length = (velocity.x()*velocity.x()) + (velocity.y()*velocity.y());
 		if (velocity_length > 0) {
 			const auto newHeading = velocity / std::sqrt(velocity_length);
-			heading = newHeading;
+			heading_ = newHeading;
 			if (velocity_length > maxSpeed*maxSpeed) {
 				velocity = newHeading * maxSpeed;
 			}
 		}
-
 		move(velocity);
-		checkCollision();
+		
 	}
 }
 
@@ -112,7 +111,7 @@ const std::vector<const pig*> pig::getNeighbours() {
 	return neighbours;
 }
 
-void pig::checkCollision() {
+void pig::checkCollision(delta_time dt) {
 	for (auto i = begin_collision();i != end_collision(); ++i) {
 		actor *ptr = &(*i);
 		auto toVector = location() - ptr->location();
@@ -132,25 +131,29 @@ void pig::checkCollision() {
 			case wall::NORTH:
 				if (location().y() > w->location().y())
 				{
-					move(math::vector2d(0, -1 * maxSpeed));
+					velocity += math::vector2d(0,w->location().y() - location().y());
+					//move(math::vector2d(0, -1 * maxSpeed));
 				}
 				break;
 			case wall::SOUTH:
 				if (location().y() < w->location().y())
 				{
-					move(math::vector2d(0, maxSpeed));
+					velocity += math::vector2d(0, w->location().y() - location().y());
+					//move(math::vector2d(0, maxSpeed));
 				}
 				break;
 			case wall::WEST:
 				if (location().x() > w->location().x())
 				{
-					move(math::vector2d(-1 * maxSpeed, 0));
+					velocity += math::vector2d(w->location().x()-location().x(), 0);
+					//move(math::vector2d(-1 * maxSpeed, 0));
 				}
 				break;
 			case wall::EAST:
 				if (location().x() < w->location().x())
 				{
-					move(math::vector2d(maxSpeed, 0));
+					velocity += math::vector2d(w->location().x() - location().x(), 0);
+					//move(math::vector2d(maxSpeed, 0));
 				}
 				break;
 			}
@@ -163,7 +166,9 @@ void pig::checkCollision() {
 				distance = std::sqrt(toVectorLength);
 				const double overlap = (this->radius() + ptr->radius()) - distance;
 				auto handleVector = toVector / distance * overlap;
-				move(math::normalize(handleVector)*maxSpeed);
+				//move(normalize(handleVector)*maxSpeed*to_seconds(dt));
+				//heading_ = normalize(handleVector);
+				velocity += handleVector;
 			}
 		}
 	}

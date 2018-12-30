@@ -36,6 +36,7 @@ enum Forces{
   scalar range_of_perception() const override { return 50.0f; }
   scalar radius() const override { return 8.0f; }
   bool incorporeal() const override { return false; }
+  math::vector2d heading() const override { return heading_; }
   
 
   map::map_node* const getClosestNode() const;
@@ -53,14 +54,14 @@ enum Forces{
   double getWanderJitter() const { return wanderJitter; }
  
   std::map<Forces, double> getDNA() { return dna_; }
-  math::vector2d getHeading() const { return heading; }
+  math::vector2d getHeading() const { return heading_; }
 
 private:
   bool alive_ = true;
   
   double calculateDistance(const map::map_node& mapNode) const;
   //void handleCollision(actor * collider);
-  void checkCollision();
+  void checkCollision(delta_time dt);
   void die();
 
   play::image_drawable drawable_;
@@ -70,7 +71,7 @@ private:
   boat& boat_;
   SteeringBehaviors* steeringBehavior;
   math::vector2d velocity = math::vector2d(0, 0);
-  math::vector2d heading = math::vector2d(0,0);
+  math::vector2d heading_ = math::vector2d(0,0);
   
   double mass = 1;
   double maxSpeed = 1.5;

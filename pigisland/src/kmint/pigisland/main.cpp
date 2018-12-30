@@ -48,7 +48,7 @@ int main() {
 
   //bottom right island
   s.build_actor<pigisland::island>(math::vector2d{ 925.0f, 750.0f }, 125);
-  s.build_actor<pigisland::island>(math::vector2d{ 1010.0f, 625.0f }, 50);
+  s.build_actor<pigisland::island>(math::vector2d{ 1020.0f, 625.0f }, 50);
   s.build_actor<pigisland::island>(math::vector2d{ 915.0f, 625.0f }, 30);
   s.build_actor<pigisland::island>(math::vector2d{ 915.0f, 575.0f }, 30);
   s.build_actor<pigisland::island>(math::vector2d{ 1020.0f, 750.0f }, 150);
