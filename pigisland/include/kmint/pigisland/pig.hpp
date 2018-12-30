@@ -62,6 +62,8 @@ private:
   double calculateDistance(const map::map_node& mapNode) const;
   //void handleCollision(actor * collider);
   void checkCollision(delta_time dt);
+
+
   void die();
 
   play::image_drawable drawable_;

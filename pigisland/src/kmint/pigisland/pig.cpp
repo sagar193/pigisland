@@ -170,6 +170,19 @@ void pig::checkCollision(delta_time dt) {
 				//heading_ = normalize(handleVector);
 				velocity += handleVector;
 			}
+		} else
+		{
+			const auto & k = num_colliding_actors();
+			double distance = 0;
+			const auto & toVectorLength = toVector.x() * toVector.x() + toVector.y() * toVector.y();
+			if (toVectorLength > 0) {
+				distance = std::sqrt(toVectorLength);
+				const double overlap = (this->radius() + ptr->radius()) - distance;
+				auto handleVector = toVector / distance * overlap;
+				//move(normalize(handleVector)*maxSpeed*to_seconds(dt));
+				//heading_ = normalize(handleVector);
+				velocity += handleVector;
+			}
 		}
 	}
 }

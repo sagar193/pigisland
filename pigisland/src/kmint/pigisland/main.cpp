@@ -72,9 +72,9 @@ int main() {
 
 
 
-  for (int i = 0; i < 10; ++i) {
+  for (int i = 0; i < 100; ++i) {
     //s.build_actor<pigisland::pig>(math::vector2d(i * 10.0f, i * 6.0f),1,1,1,.05,-1,1, map.graph(),shark,boat);
-	s.build_actor<pigisland::pig>(math::vector2d(100.0f, 0.0f), 1, 1, 1, .005, -1, 1, map.graph(), shark, boat);
+	s.build_actor<pigisland::pig>(math::vector2d(500.0f, 00.0f), 1, 1, 1, 1, 1, -1, map.graph(), shark, boat);
   }
   
 

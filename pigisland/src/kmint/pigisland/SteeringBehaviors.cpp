@@ -37,7 +37,6 @@ namespace kmint {
 			const auto alignment = CalculateAlignment(pig,others)*dna[pig::Forces::ALIGNMENT];
 			const auto aToBoat = CalculateAttractionToBoat(pig)*dna[pig::Forces::ATTRACTIONTOBOAT];
 			const auto aToShark = CalculateAttractionToShark(pig)*dna[pig::Forces::ATTRACTIONTOSHARK];
-			const auto islandAvoidance = CalculateIslandAvoidance(pig, islands);
 			const auto totalForce = wander + cohesion + separation + alignment + aToBoat + aToShark; //+ islandAvoidance;
 			return totalForce;
 		}
