@@ -2,6 +2,8 @@
 
 namespace kmint {
 namespace math {
+scalar cos(angle a) { return std::cos(a.radians()); }
+scalar sin(angle a) { return std::sin(a.radians()); }
 angle acos(scalar c) { return angle{std::acos(c)}; }
 angle asin(scalar c) { return angle{std::asin(c)}; }
 angle atan(scalar c) { return angle{std::atan(c)}; }

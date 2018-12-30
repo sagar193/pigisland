@@ -9,22 +9,16 @@ namespace kmint {
 		class SteeringBehaviors {
 		public:
 			SteeringBehaviors();
-			void getNeighbours();
-			kmint::math::vector2d CalculateForces(kmint::pigisland::pig &pig) const;
+			math::vector2d CalculateForces(pig &pig) const;
+			math::vector2d CalculateWander(pig &pig) const;
+
+			math::vector2d CalculateSeparation(const pig &pig,const std::vector<const play::actor*>& neighbours) const ;
+			math::vector2d CalculateAlignment(const pig &pig,const std::vector<const play::actor*>& neighbours) const ;
+			math::vector2d CalculateCohesion(const pig &pig, const std::vector<const play::actor*>& neighbours) const ;
+			math::vector2d CalculateIslandAvoidance(const pig &pig, const std::vector<const play::actor*>& islands) const;
 			
-			kmint::math::vector2d CalculateWanderForces(kmint::pigisland::pig &pig) const;
-
-			kmint::math::vector2d CalculateSeperationForces(kmint::pigisland::pig &pig) const ;
-			kmint::math::vector2d CalculateAlignmentForces(kmint::pigisland::pig &pig) const ;
-			kmint::math::vector2d CalculateCohesionForces(kmint::pigisland::pig &pig) const ;
-			
-			kmint::math::vector2d CalculateAttractionToShark(kmint::pigisland::pig &pig) const;
-			kmint::math::vector2d CalculateAttractionToBoat(kmint::pigisland::pig &pig) const;
-
-		private:
-
-
-			//std::vector<kmint::pigisland::pig> neighbours;
+			math::vector2d CalculateAttractionToShark(pig &pig) const;
+			math::vector2d CalculateAttractionToBoat(pig &pig) const;
 		};
 	}
 }

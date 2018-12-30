@@ -5,6 +5,8 @@
 #include "kmint/play/actor.hpp"
 namespace kmint::play {
 
+/*! \brief Base class for all actors that have a fixed position on the stage
+ */
 class static_actor : public actor {
 public:
   static_actor(math::vector2d fixed_location) : location_{fixed_location} {}

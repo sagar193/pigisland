@@ -11,6 +11,10 @@
 
 namespace kmint {
 namespace graph {
+
+//! A tag used to indicate whether the note belongs was visited or is part of a
+//! path
+enum class node_tag { normal, visited, path };
 template <typename NodeInfo> class basic_graph;
 
 //! A node in a graph
@@ -67,8 +71,36 @@ public:
   edge_type &operator[](std::size_t index) noexcept { return *edges_[index]; }
   std::size_t num_edges() const noexcept { return edges_.size(); }
   std::size_t node_id() const noexcept { return node_id_; }
-  bool tagged() const noexcept { return tagged_; }
-  void tagged(bool t) noexcept { tagged_ = t; }
+  /*!
+   * Returns whether this node was tagged
+   *
+   * A node is considered to be tagged if its tag is unequal to node_tag::normal
+   *
+   * \return Whether the node is tagged or not
+   */
+  [[deprecated]] bool tagged() const noexcept {
+    return tag_ != node_tag::normal;
+  }
+  /*!
+   * Sets the tagged state of a node
+   *
+   * This function is provided solely for backwards compatibility reasons.
+   * Passing false will set this node's tag to node_tag::normal. Passing true
+   * will set this node's tag to node_tag::visisted
+   *
+   */
+  [[deprecated]] void tagged(bool t) noexcept {
+    tag_ = t ? node_tag::visited : node_tag::normal;
+  }
+  /*!
+   * \return this node's tag
+   */
+  node_tag tag() const noexcept { return tag_; };
+  /*!
+   * Changes this node's tag.
+   * \param t the tag to assign to this node.
+   */
+  void tag(node_tag t) noexcept { tag_ = t; };
 
   friend class basic_graph<NodeInfo>;
 
@@ -86,7 +118,7 @@ private:
   std::size_t node_id_;
   kmint::math::vector2d location_;
   NodeInfo node_info_;
-  bool tagged_{};
+  node_tag tag_{node_tag::normal};
   container edges_{};
 };
 

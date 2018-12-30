@@ -5,6 +5,8 @@
 #include "kmint/play/actor.hpp"
 
 namespace kmint::play {
+/*! \brief Base class for actors that can move freely across the stage.
+ */
 class free_roaming_actor : public actor {
 public:
   free_roaming_actor(math::vector2d location) : actor{}, location_{location} {}

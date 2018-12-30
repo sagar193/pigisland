@@ -58,12 +58,6 @@ struct loop_controls {
 */
 template <typename MainFun>
 void main_loop(play::stage &s, ui::window &w, MainFun f) {
-  auto wrap = [](auto it) {
-    return util::wrap_iterator<ui::drawable const>(
-        it, [](play::actor const &a) -> ui::drawable const & {
-          return a.drawable();
-        });
-  };
   time t_prev = now();
   loop_controls ctl{};
   while (true) {
@@ -75,8 +69,15 @@ void main_loop(play::stage &s, ui::window &w, MainFun f) {
       break;
     if (!ctl.pause)
       s.act(dt);
-    if (ctl.render)
-      ui::render(w, wrap(s.cbegin()), wrap(s.cend()));
+    if (ctl.render) {
+      ui::frame f{w.frame()};
+      for (auto const &actor : s) {
+        if (actor.must_draw()) {
+          actor.drawable().draw(f);
+        }
+      }
+      // ui::render(w, wrap(s.cbegin()), wrap(s.cend()));
+    }
   }
 }
 } // namespace kmint

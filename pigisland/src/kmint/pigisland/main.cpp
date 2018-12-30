@@ -1,10 +1,14 @@
 #include "kmint/main.hpp" // voor de main loop
 #include "kmint/pigisland/boat.hpp"
 #include "kmint/pigisland/pig.hpp"
+#include "kmint/pigisland/wall.hpp"
 #include "kmint/pigisland/resources.hpp"
 #include "kmint/pigisland/shark.hpp"
+#include "kmint/pigisland/island.hpp"
+
 #include "kmint/play.hpp"
 #include "kmint/ui.hpp"
+
 
 using namespace kmint;
 int main() {
@@ -27,9 +31,50 @@ int main() {
   auto& shark = s.build_actor<pigisland::shark>(map.graph());
   auto& boat = s.build_actor<pigisland::boat>(map.graph());
 
-  s.build_actor<play::map_actor>(math::vector2d{0.f, 0.f}, map.graph());
+  
+  s.build_actor<play::map_actor>(math::vector2d{ 0.f, 0.f }, map.graph());
+
+  //borders
+  s.build_actor<pigisland::wall>(math::vector2d{ 500.0f, 750.0f },pigisland::wall::Face::NORTH);
+  s.build_actor<pigisland::wall>(math::vector2d{ 500.0f, 10.0f }, pigisland::wall::Face::SOUTH);
+  s.build_actor<pigisland::wall>(math::vector2d{ .0f, 325.0f }, pigisland::wall::Face::EAST);
+  s.build_actor<pigisland::wall>(math::vector2d{ 1020.0f, 325.0f }, pigisland::wall::Face::WEST);
+
+  //right top island
+  s.build_actor<pigisland::island>(math::vector2d{ 1020.0f, 0.0f }, 80);
+  s.build_actor<pigisland::island>(math::vector2d{ 990.0f, 0.0f }, 80);
+  s.build_actor<pigisland::island>(math::vector2d{ 1020.0f, 100.0f }, 30);
+  s.build_actor<pigisland::island>(math::vector2d{ 1020.0f, 50.0f }, 30);
+
+  //bottom right island
+  s.build_actor<pigisland::island>(math::vector2d{ 925.0f, 750.0f }, 125);
+  s.build_actor<pigisland::island>(math::vector2d{ 1020.0f, 625.0f }, 50);
+  s.build_actor<pigisland::island>(math::vector2d{ 915.0f, 625.0f }, 30);
+  s.build_actor<pigisland::island>(math::vector2d{ 915.0f, 575.0f }, 30);
+  s.build_actor<pigisland::island>(math::vector2d{ 1020.0f, 750.0f }, 150);
+
+  //bottom left island
+  s.build_actor<pigisland::island>(math::vector2d{ 125.0f, 625.0f }, 75);
+  s.build_actor<pigisland::island>(math::vector2d{ 175.0f, 575.0f }, 25);
+
+  //top left island
+  s.build_actor<pigisland::island>(math::vector2d{ 0.0f, 0.0f }, 100);
+  s.build_actor<pigisland::island>(math::vector2d{ 100.0f, 0.0f }, 100);
+  s.build_actor<pigisland::island>(math::vector2d{ 175.0f, 45.0f }, 27);
+  s.build_actor<pigisland::island>(math::vector2d{ 225.0f, 45.0f }, 27);
+  s.build_actor<pigisland::island>(math::vector2d{ 275.0f, 45.0f }, 27);
+
+  //statue
+  s.build_actor<pigisland::island>(math::vector2d{ 0.0f, 680.0f }, 50);
+  s.build_actor<pigisland::island>(math::vector2d{ 50.0f, 680.0f }, 50);
+
+
+
+
+
   for (int i = 0; i < 100; ++i) {
-    s.build_actor<pigisland::pig>(math::vector2d(i * 10.0f, i * 6.0f), map.graph(),shark,boat);
+    //s.build_actor<pigisland::pig>(math::vector2d(i * 10.0f, i * 6.0f),1,1,1,.05,-1,1, map.graph(),shark,boat);
+	s.build_actor<pigisland::pig>(math::vector2d(500.0f, 00.0f), 1, 1, 1, 1, 1, -1, map.graph(), shark, boat);
   }
   
 
