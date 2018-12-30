@@ -68,7 +68,7 @@ namespace kmint {
 				wanderVector /= std::sqrt(wanderLength);
 				wanderVector *= pig.getWanderRadius();
 			}
-			const auto& distance = (pig.getHeading()*pig.getWanderDistance());
+			const auto& distance = (pig.heading()*pig.getWanderDistance());
 
 			auto wander = wanderVector + distance;
 			//const auto& totalWanderLength = wander.x()*wander.x() + wander.y()*wander.y();

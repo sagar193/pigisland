@@ -57,7 +57,6 @@ enum Forces{
   //kmint::pigisland::DNA getDNA() const { return dna_; };
   bool const alive() const { return alive_; }
   void revive();
-  math::vector2d getHeading() const { return heading_; }
 
 private:
   bool alive_ = true;
