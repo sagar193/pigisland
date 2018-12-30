@@ -3,6 +3,7 @@
 #include "kmint/pigisland/island.hpp"
 #include "kmint/pigisland/wall.hpp"
 #include <algorithm>
+#include <numeric>
 
 
 namespace kmint {
@@ -125,17 +126,41 @@ void ActorContainer::spawnNewPigs(int const pigsToSpawn)
 		}
 	}
 
+	
 	std::vector<pig*> candidates;
-
+	std::vector<float> cumulativeFitnis;
 	std::sort(pigVector.begin(), pigVector.end(), [](pig* pig1, pig* pig2) {return pig1->timeAlive() > pig2->timeAlive();});
 	for (auto p : pigVector)
 	{
 		if(candidates.size()<countCandidates)
 		{
 			candidates.push_back(p);
+			//cumulativeFitnis.push_back(to_seconds(p->timeAlive()) + last);
 		}
 	}
+	float totalFitnis = std::accumulate(candidates.begin(), candidates.end(), 0,[](double i, const pig* p) { return to_seconds(p->timeAlive()) + i; });
 
+
+	for (auto currentP : pigVector)
+	{
+		float last = 0;
+		auto papachance = random_scalar(to_seconds(candidates[candidates.size()]->timeAlive()),totalFitnis);
+		pig* papa = nullptr;
+		auto mamachance = random_scalar(to_seconds(candidates[candidates.size()]->timeAlive()), totalFitnis);
+		pig* mama = nullptr;
+		for (auto p : candidates) {
+			if(papachance >=last && papachance <=(to_seconds(p->timeAlive())+last))
+			{
+				papa = p;
+			}
+			if (mamachance >= last && mamachance <= (to_seconds(p->timeAlive()) + last))
+			{
+				mama = p;
+			}
+			last = to_seconds(p->timeAlive());
+		}
+
+	}
 
 
 	startTime = now();

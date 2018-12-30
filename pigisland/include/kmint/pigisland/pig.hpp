@@ -63,6 +63,7 @@ enum Forces{
   delta_time timeAlive() const { return timeAlive_; }
   void revive(math::vector2d newLocation,double alignment, double cohesion, double separation, double attractionToShark, double attractionToBoat);
   void die();
+  void spliceDNA(pig papa, pig mama);
 
 private:
   bool caught_ = false;
