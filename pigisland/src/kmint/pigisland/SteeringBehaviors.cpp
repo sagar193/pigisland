@@ -105,10 +105,10 @@ namespace kmint {
 				}
 				midpoint /= neighbours.size();
 				cohessionVector = midpoint - pig.location();
-				//const auto& cohessionLength = cohessionVector.x() *cohessionVector.x() + cohessionVector.y()*cohessionVector.y();
-				//if (cohessionLength > 0) {
-				//	cohessionVector = cohessionVector / std::sqrt(cohessionLength);
-				//}
+				const auto& cohessionLength = cohessionVector.x() *cohessionVector.x() + cohessionVector.y()*cohessionVector.y();
+				if (cohessionLength > 0) {
+					cohessionVector = cohessionVector / std::sqrt(cohessionLength);
+				}
 			}
 			return cohessionVector;
 		}

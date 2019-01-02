@@ -10,7 +10,7 @@ namespace pigisland {
 class ActorContainer
 {
 public:
-	ActorContainer(kmint::map::map_graph &g, play::stage& s);
+	ActorContainer(kmint::map::map_graph &g, play::stage& s/*, map::map& map*/);
 	ActorContainer(const ActorContainer& other) = delete;
 	ActorContainer(ActorContainer&& other) = delete;
 	ActorContainer operator=(const ActorContainer& other) = delete;

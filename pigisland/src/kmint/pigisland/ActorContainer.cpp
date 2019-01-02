@@ -11,7 +11,7 @@
 namespace kmint {
 namespace pigisland {
 
-ActorContainer::ActorContainer(kmint::map::map_graph &g, play::stage& s):
+ActorContainer::ActorContainer(kmint::map::map_graph &g, play::stage& s/*,map::map& map*/):
 	_g(g), _s(s)
 {
 	myShark = &(_s.build_actor<pigisland::shark>(_g, *this));
@@ -34,6 +34,8 @@ ActorContainer::ActorContainer(kmint::map::map_graph &g, play::stage& s):
 void ActorContainer::createInitWalls() 
 {
 	//borders
+	int count = 10;
+	//for()
 	_s.build_actor<pigisland::wall>(math::vector2d{ 500.0f, 750.0f }, pigisland::wall::Face::NORTH);
 	_s.build_actor<pigisland::wall>(math::vector2d{ 500.0f, 10.0f }, pigisland::wall::Face::SOUTH);
 	_s.build_actor<pigisland::wall>(math::vector2d{ .0f, 325.0f }, pigisland::wall::Face::EAST);

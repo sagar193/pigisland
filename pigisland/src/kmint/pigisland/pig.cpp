@@ -89,7 +89,7 @@ void pig::die()
 
 void pig::spliceDNA(const pig& papa, const pig& mama)
 {
-	const auto cut = int(random_scalar(0, 5));
+	const auto cut = random_int(0, 6);
 	for(int i = 0;i<6;i++)
 	{
 		if (i <= cut) {
@@ -99,6 +99,27 @@ void pig::spliceDNA(const pig& papa, const pig& mama)
 		dna_[dna_index[i]] = mama.dna_.at(dna_index[i]);
 	}
 
+	const auto mutationChance = random_int(0, 101);
+	if(mutationChance>=95)
+	{
+		if(dna_index[cut] == ATTRACTIONTOSHARK || dna_index[cut] == ATTRACTIONTOBOAT)
+		{
+			dna_[dna_index[cut]] = random_scalar(-1, 1);
+		}
+		else
+		{
+			dna_[dna_index[cut]] = random_scalar(0, 1);
+		}
+		//const auto papaMutation = papa.dna_.at(dna_index[cut]);
+		//const auto mamaMutation = mama.dna_.at(dna_index[cut]);
+		//if(papaMutation>=mamaMutation)
+		//{
+		//	dna_[dna_index[cut]] = random_scalar(mamaMutation, papaMutation);
+		//} else
+		//{
+		//	dna_[dna_index[cut]] = random_scalar(papaMutation,mamaMutation);
+		//}
+	}
 }
 
 
