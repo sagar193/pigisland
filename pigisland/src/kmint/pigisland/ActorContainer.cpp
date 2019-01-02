@@ -4,6 +4,8 @@
 #include "kmint/pigisland/wall.hpp"
 #include <algorithm>
 #include <numeric>
+#include <cmath>
+#include <iostream>
 
 
 namespace kmint {
@@ -51,8 +53,12 @@ ActorContainer::ActorContainer(kmint::map::map_graph &g, play::stage& s):
 
 	for (int i = 0; i < 100; ++i) {
 		auto location = random_scalar(0, islands.size());
-		pigVector.push_back(&(_s.build_actor<pigisland::pig>(islands[location]->location(), 1, 1, 1, .05, 1, -1, _g, *myShark, *myBoat)));
+		
+		pigVector.push_back(&(_s.build_actor<pigisland::pig>(islands[location]->location(), 
+			random_scalar(0, 1), random_scalar(0, 1), random_scalar(0, 1), random_scalar(0, 1), random_scalar(-1, 1), random_scalar(-1, 1), _g, *myShark, *myBoat)));
 	}
+
+
 	startTime = now();
 }
 
@@ -93,8 +99,31 @@ bool ActorContainer::sortHelper(pig* pig1,pig* pig2)
 void ActorContainer::spawnNewPigs(int const pigsToSpawn)
 {	
 	auto endTime = now() - startTime;
+
+
+	std::map<pig::Forces, double> avgdna;
+
+	avgdna[pig::Forces::ATTRACTIONTOSHARK] = 0;
+	avgdna[pig::Forces::ATTRACTIONTOBOAT] = 0;
+	avgdna[pig::Forces::WANDER] = 0;
+	avgdna[pig::Forces::COHESION] = 0;
+	avgdna[pig::Forces::ALIGNMENT] = 0;
+	avgdna[pig::Forces::SEPARATION] = 0;
+
+
+
+
+
 	for(auto& p:pigVector)
 	{
+		avgdna[pig::Forces::ATTRACTIONTOSHARK] += p->getDNA()[pig::Forces::ATTRACTIONTOSHARK];
+		avgdna[pig::Forces::ATTRACTIONTOBOAT] += p->getDNA()[pig::Forces::ATTRACTIONTOBOAT];
+		avgdna[pig::Forces::WANDER] += p->getDNA()[pig::Forces::WANDER];
+		avgdna[pig::Forces::COHESION] += p->getDNA()[pig::Forces::COHESION];
+		avgdna[pig::Forces::ALIGNMENT] += p->getDNA()[pig::Forces::ALIGNMENT];
+		avgdna[pig::Forces::SEPARATION] += p->getDNA()[pig::Forces::SEPARATION];
+
+
 		//4 walls
 		//p->revive();
 		int countCol = 0;
@@ -126,27 +155,38 @@ void ActorContainer::spawnNewPigs(int const pigsToSpawn)
 		}
 	}
 
-	
+	std::cout << "a to shark " <<avgdna[pig::Forces::ATTRACTIONTOSHARK] / 100 << '\n';
+	std::cout << "a to boat "<<avgdna[pig::Forces::ATTRACTIONTOBOAT] / 100 << '\n';
+	std::cout << "wander "<< avgdna[pig::Forces::WANDER] / 100 << '\n';
+	std::cout << "cohesion " << avgdna[pig::Forces::COHESION] / 100 << '\n';
+	std::cout << "alignment " << avgdna[pig::Forces::ALIGNMENT] / 100 << '\n';
+	std::cout << "seperation " << avgdna[pig::Forces::SEPARATION] / 100 << '\n';
+	std::cout << '\n';
+
+
+
 	std::vector<pig*> candidates;
-	std::vector<float> cumulativeFitnis;
+	//std::vector<float> cumulativeFitnis;
 	std::sort(pigVector.begin(), pigVector.end(), [](pig* pig1, pig* pig2) {return pig1->timeAlive() > pig2->timeAlive();});
+	float totalFitnis = 0;
 	for (auto p : pigVector)
 	{
 		if(candidates.size()<countCandidates)
 		{
 			candidates.push_back(p);
+			totalFitnis += to_seconds(p->timeAlive());
 			//cumulativeFitnis.push_back(to_seconds(p->timeAlive()) + last);
 		}
 	}
-	float totalFitnis = std::accumulate(candidates.begin(), candidates.end(), 0,[](double i, const pig* p) { return to_seconds(p->timeAlive()) + i; });
+	float totalFitnis2 = std::accumulate(candidates.begin(), candidates.end(), 0,[](float i, const pig* p) { return to_seconds(p->timeAlive()) + i; });
 
 
 	for (auto currentP : pigVector)
 	{
-		float last = 0;
-		auto papachance = random_scalar(to_seconds(candidates[candidates.size()]->timeAlive()),totalFitnis);
+		float last = to_seconds(candidates[candidates.size() - 1]->timeAlive());
+		const auto papachance = random_scalar(to_seconds(candidates[candidates.size()-1]->timeAlive()),totalFitnis);
 		pig* papa = nullptr;
-		auto mamachance = random_scalar(to_seconds(candidates[candidates.size()]->timeAlive()), totalFitnis);
+		const auto mamachance = random_scalar(to_seconds(candidates[candidates.size()-1]->timeAlive()), totalFitnis);
 		pig* mama = nullptr;
 		for (auto p : candidates) {
 			if(papachance >=last && papachance <=(to_seconds(p->timeAlive())+last))
@@ -157,12 +197,21 @@ void ActorContainer::spawnNewPigs(int const pigsToSpawn)
 			{
 				mama = p;
 			}
-			last = to_seconds(p->timeAlive());
+			last += to_seconds(p->timeAlive());
 		}
+		if(mama == nullptr || papa ==nullptr)
+		{
+			int  k = 0;
+		}
+		
+		currentP->spliceDNA(*papa, *mama);
 
 	}
 
-
+	for (auto currentP : pigVector)
+	{
+		currentP->revive();
+	}
 	startTime = now();
 	
 }

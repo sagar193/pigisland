@@ -36,6 +36,12 @@ pig::pig(math::vector2d location,
 	dna_[ATTRACTIONTOSHARK] = attractionToShark;
 	dna_[ATTRACTIONTOBOAT] = attractionToBoat;
 	timeAlive_ = delta_time(0);
+	dna_index[0] = WANDER;
+	dna_index[1] = SEPARATION;
+	dna_index[2] = COHESION;
+	dna_index[3] = ALIGNMENT;
+	dna_index[4] = ATTRACTIONTOSHARK;
+	dna_index[5] = ATTRACTIONTOBOAT;
 }
 
 void pig::act(delta_time dt) {
@@ -81,6 +87,19 @@ void pig::die()
 	caught_ = true;
 }
 
+void pig::spliceDNA(const pig& papa, const pig& mama)
+{
+	const auto cut = int(random_scalar(0, 5));
+	for(int i = 0;i<6;i++)
+	{
+		if (i <= cut) {
+			dna_[dna_index[i]] = papa.dna_.at(dna_index[i]);
+			continue;
+		}
+		dna_[dna_index[i]] = mama.dna_.at(dna_index[i]);
+	}
+
+}
 
 
 
@@ -176,16 +195,11 @@ void pig::checkCollision(delta_time dt) {
 	}
 }
 
-void pig::revive(math::vector2d newLocation,double alignment, double cohesion, double separation, double attractionToShark, double attractionToBoat)
+void pig::revive()
 {
 	alive_ = true;
+	caught_ = false;
 	timeAlive_ = delta_time(0);
-	dna_[ALIGNMENT] = alignment;
-	dna_[COHESION] = cohesion;
-	dna_[SEPARATION] = separation;
-	dna_[ATTRACTIONTOSHARK] = attractionToShark;
-	dna_[ATTRACTIONTOBOAT] = attractionToBoat;
-	location(newLocation);
 }
 
 

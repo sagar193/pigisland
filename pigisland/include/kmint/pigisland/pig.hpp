@@ -61,9 +61,9 @@ enum Forces{
   bool alive() const { return alive_; }
   bool caught() const { return caught_; }
   delta_time timeAlive() const { return timeAlive_; }
-  void revive(math::vector2d newLocation,double alignment, double cohesion, double separation, double attractionToShark, double attractionToBoat);
+  void revive();
   void die();
-  void spliceDNA(pig papa, pig mama);
+  void spliceDNA(const pig& papa,const pig& mama);
 
 private:
   bool caught_ = false;
@@ -89,6 +89,7 @@ private:
   double wanderJitter = .1;
 
   std::map<Forces, double> dna_;
+  std::map<int, Forces> dna_index;
 };
 
 } // namespace pigisland
