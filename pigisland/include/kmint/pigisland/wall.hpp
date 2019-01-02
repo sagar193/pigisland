@@ -27,7 +27,7 @@ namespace kmint {
 
 			const ui::drawable &drawable() const override { return drawable_; }
 			bool perceivable() const override { return true; }
-			bool must_draw() const override { return true; }
+			bool must_draw() const override { return false; }
 			scalar radius() const override { return 10000.0f; }
 			bool incorporeal() const override { return false; }
 			double getLength() const { return 10; }

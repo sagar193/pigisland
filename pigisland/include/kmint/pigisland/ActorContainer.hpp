@@ -34,7 +34,8 @@ private:
 	int const spawnOldPigs();
 	void spawnNewPigs(int const pigsToSpawn);
 	std::vector<pig*> getAllAlive() const;
-
+	void createInitWalls();
+	void createInitIslands();
 };
 }
 }
