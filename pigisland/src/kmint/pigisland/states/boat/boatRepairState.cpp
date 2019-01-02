@@ -6,6 +6,7 @@
 #include "kmint/play.hpp"
 #include "kmint/pigisland/boat.hpp"
 #include "kmint/pigisland/node_algorithm.hpp"
+#include <iostream> 
 
 namespace kmint {
 namespace pigisland {
@@ -43,23 +44,26 @@ namespace pigisland {
 			_boat.durability(repair);
 			_mooringsEffectiveness.at(1) = (_mooringsEffectiveness.at(1) + repair) / 2;
 			_goal = nullptr;
+			std::cout << "mooring 1 repaired " << repair << " durability \n";
 		}
 		else if (_goal->node_info().kind == '2') {
 			repair = random_int(20, 101);
 			_boat.durability(repair);
 			_mooringsEffectiveness.at(2) = (_mooringsEffectiveness.at(2) + repair) / 2;
 			_goal = nullptr;
-
+			std::cout << "mooring 2 repaired " << repair << " durability \n";
 		}
 		else if (_goal->node_info().kind == '3') {
 			_boat.durability(50);
 			_mooringsEffectiveness.at(3) = (_mooringsEffectiveness.at(3) + 50) / 2;
 			_goal = nullptr;
+			std::cout << "mooring 3 repaired 50 durability \n";
 		}
 		else {
 			throw "something went wrong repairing boat";
 		}
 		_boat.setState(boat::WANDER_STATE);
+		printMooringEffectiveness();
 	}
 
 	void boatRepairState::pickGoal() {
@@ -78,6 +82,17 @@ namespace pigisland {
 				lastValue += _mooringsEffectiveness.at(i);
 			}
 		}
+	}
+
+	void boatRepairState::printMooringEffectiveness() {
+		std::cout << "mooring effectiveness:";
+		int i = 0;
+		for (auto it = _mooringsEffectiveness.begin(); it != _mooringsEffectiveness.end(); it++) {
+			std::cout << " (" << i << ") " << it->second;
+			i++;
+		}
+		std::cout << "\n";
+
 	}
 }
 }

@@ -26,6 +26,7 @@ private:
 
 	void repair();
 	void pickGoal();
+	void printMooringEffectiveness();
 };
 }
 }
