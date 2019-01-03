@@ -35,18 +35,19 @@ enum Forces{
   bool perceptive() const override { return !caught_; }
   bool perceivable() const override { return !caught_; }
   bool must_draw() const override { return !caught_; }
-  scalar range_of_perception() const override { return 50.0f; }
+  scalar range_of_perception() const override { return 30.0f; }
   scalar radius() const override { return 8.0f; }
   bool incorporeal() const override { return false; }
+  //void handle_collisions() const override;
+
+
+  math::vector2d getVelocity() const { return velocity; }
   math::vector2d heading() const override { return heading_; }
   void setLocation(math::vector2d newLocation) { location(newLocation); }
 
   map::map_node* const getClosestNode() const;
 
   const std::vector<const pig*> getNeighbours();
-
-  shark* getShark() const { return &shark_; }
-  boat* getBoat() const { return &boat_; }
 
   double getMass() const { return mass; }
   double getMaxSpeed() const { return maxSpeed; }
@@ -55,13 +56,14 @@ enum Forces{
   double getWanderDistance() const { return wanderDistance; }
   double getWanderJitter() const { return wanderJitter; }
  
-  std::map<Forces, double> getDNA() { return dna_; }
+  std::map<Forces, double> getDNA() const { return dna_; }
   //void setDna(double alignment, double cohesion, double separation, double attractionToShark, double attractionToBoat);
   
   bool alive() const { return alive_; }
   bool caught() const { return caught_; }
   delta_time timeAlive() const { return timeAlive_; }
   void revive();
+  
   void die();
   void spliceDNA(const pig& papa,const pig& mama);
 
@@ -70,20 +72,19 @@ private:
   bool alive_ = true;
   delta_time timeAlive_;
   double calculateDistance(const map::map_node& mapNode) const;
-  //void handleCollision(actor * collider);
-  void checkCollision(delta_time dt);
   
+  void handleCollision(delta_time dt);
+  math::vector2d getCollisionVector();
+
   play::image_drawable drawable_;
   map::map_graph& _graph;
 
-  shark& shark_;
-  boat& boat_;
   SteeringBehaviors* steeringBehavior;
   math::vector2d velocity = math::vector2d(0, 0);
   math::vector2d heading_ = math::vector2d(0,0);
   
   double mass = 1;
-  double maxSpeed = 5;
+  double maxSpeed = 10;
   double wanderRadius = 5;
   double wanderDistance = 1;
   double wanderJitter = .1;

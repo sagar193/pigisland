@@ -9,16 +9,15 @@ namespace kmint {
 		class SteeringBehaviors {
 		public:
 			SteeringBehaviors();
-			math::vector2d CalculateForces(pig &pig) const;
-			math::vector2d CalculateWander(pig &pig) const;
+			math::vector2d CalculateForces(const pig &pig) const;
+			math::vector2d CalculateWander(const pig &pig) const;
+
+		    math::vector2d CalculateSeek(const pig& pig, math::vector2d target) const;
 
 			math::vector2d CalculateSeparation(const pig &pig,const std::vector<const play::actor*>& neighbours) const ;
 			math::vector2d CalculateAlignment(const pig &pig,const std::vector<const play::actor*>& neighbours) const ;
 			math::vector2d CalculateCohesion(const pig &pig, const std::vector<const play::actor*>& neighbours) const ;
 			math::vector2d CalculateIslandAvoidance(const pig &pig, const std::vector<const play::actor*>& islands) const;
-			
-			math::vector2d CalculateAttractionToShark(pig &pig) const;
-			math::vector2d CalculateAttractionToBoat(pig &pig) const;
 		};
 	}
 }

@@ -21,7 +21,7 @@ ActorContainer::ActorContainer(kmint::map::map_graph &g, play::stage& s/*,map::m
 	createInitIslands();
 
 	for (int i = 0; i < 100; ++i) {
-		auto location = random_scalar(0, islands.size());
+		const auto location = random_int(0, islands.size());
 		
 		pigVector.push_back(&(_s.build_actor<pigisland::pig>(islands[location]->location(), 
 			random_scalar(0, 1), random_scalar(0, 1), random_scalar(0, 1), random_scalar(0, 1), random_scalar(-1, 1), random_scalar(-1, 1), _g, *myShark, *myBoat)));
