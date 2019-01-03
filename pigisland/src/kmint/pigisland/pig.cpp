@@ -12,7 +12,6 @@
 #include <vector>
 #include "kmint/pigisland/wall.hpp"
 #include "kmint/pigisland/island.hpp"
-#include "../../../../libkmint/kmint_handout/libkmint/include/kmint/math/vector2d.hpp"
 
 namespace kmint {
 namespace pigisland {
@@ -29,7 +28,7 @@ math::vector2d random_vector() {
 pig::pig(math::vector2d location,
 	double wanderForce, double alignmentForce, double separationForce, double cohesionForce, double attractionToShark, double attractionToBoat
 	, map::map_graph& graph, shark& shark, boat& boat)
-	: free_roaming_actor{ /*random_vector()*/location }, drawable_{ *this, pig_image() }, _graph(graph){
+	: free_roaming_actor{ /*random_vector()*/location }, drawable_{ *this, pig_image() }, _graph(graph), shark_(shark ), boat_(boat) {
 	dna_[WANDER] = wanderForce;
 	dna_[SEPARATION] = separationForce;
 	dna_[COHESION] = cohesionForce;
@@ -37,21 +36,21 @@ pig::pig(math::vector2d location,
 	dna_[ATTRACTIONTOSHARK] = attractionToShark;
 	dna_[ATTRACTIONTOBOAT] = attractionToBoat;
 	timeAlive_ = delta_time(0);
-
-	dna_index[0] = SEPARATION;
-	dna_index[1] = COHESION;
-	dna_index[2] = ALIGNMENT;
-	dna_index[3] = ATTRACTIONTOSHARK;
-	dna_index[4] = ATTRACTIONTOBOAT;
+	dna_index[0] = WANDER;
+	dna_index[1] = SEPARATION;
+	dna_index[2] = COHESION;
+	dna_index[3] = ALIGNMENT;
+	dna_index[4] = ATTRACTIONTOSHARK;
+	dna_index[5] = ATTRACTIONTOBOAT;
 }
 
 void pig::act(delta_time dt) {
 	if (alive_) {
 		free_roaming_actor::act(dt);
 		timeAlive_ += dt;
-		handleCollision(dt);
+		checkCollision(dt);
 		//Calculate forces
-		const auto& steering_force = steeringBehavior->CalculateForces(*this);//+getCollisionVector();
+		const auto& steering_force = steeringBehavior->CalculateForces(*this);
 		const auto& acceleration = steering_force / mass;
 
 		//Add new acceleration to velocity
@@ -90,7 +89,7 @@ void pig::die()
 
 void pig::spliceDNA(const pig& papa, const pig& mama)
 {
-	const auto cut = random_int(0, 5);
+	const auto cut = random_int(0, 6);
 	for(int i = 0;i<6;i++)
 	{
 		if (i <= cut) {
@@ -136,53 +135,45 @@ const std::vector<const pig*> pig::getNeighbours() {
 	return neighbours;
 }
 
-void pig::handleCollision(delta_time dt) {
-	auto collisionVector = math::vector2d(0, 0);
+void pig::checkCollision(delta_time dt) {
 	for (auto i = begin_collision();i != end_collision(); ++i) {
 		actor *ptr = &(*i);
 		auto toVector = location() - ptr->location();
-
 		if (dynamic_cast<boat*>(ptr)) {
 			caught_ = true;
+			//drawable_.set_tint(kmint::graphics::colors::black);
 		}
 		
 		else if (const auto w = dynamic_cast<wall*>(ptr);w) {
+			//auto halfWidth = w->getLength() / 2.0;
 			switch (w->getFace())
 			{
 			case wall::NORTH:
 				if (location().y() > w->location().y())
 				{
-					//velocity += (math::vector2d(0,w->location().y() - location().y())/mass)*to_seconds(dt);
-					move(math::vector2d(0, w->location().y() - location().y()));
-					velocity = math::vector2d(velocity.x(), 0);
-					//velocity += math::vector2d(0, -1*maxSpeed);
+					velocity += math::vector2d(0,w->location().y() - location().y());
+					//move(math::vector2d(0, -1 * maxSpeed));
 				}
 				break;
 			case wall::SOUTH:
 				if (location().y() < w->location().y())
 				{
-					//velocity += math::vector2d(0, w->location().y() - location().y())/mass*to_seconds(dt);
-					move(math::vector2d(0, w->location().y() - location().y()));
-					velocity = math::vector2d(velocity.x(), 0);
-					//velocity += math::vector2d(0, maxSpeed);
+					velocity += math::vector2d(0, w->location().y() - location().y());
+					//move(math::vector2d(0, maxSpeed));
 				}
 				break;
 			case wall::WEST:
 				if (location().x() > w->location().x())
 				{
-					//velocity += math::vector2d(w->location().x()-location().x(), 0) / mass * to_seconds(dt);
-					move(math::vector2d(w->location().x() - location().x(), 0));
-					velocity = math::vector2d(0, velocity.y());
-					//velocity += math::vector2d(-1 * maxSpeed, 0);
+					velocity += math::vector2d(w->location().x()-location().x(), 0);
+					//move(math::vector2d(-1 * maxSpeed, 0));
 				}
 				break;
 			case wall::EAST:
 				if (location().x() < w->location().x())
 				{
-					//velocity += math::vector2d(w->location().x() - location().x(), 0) / mass * to_seconds(dt);
-					move(math::vector2d(w->location().x() - location().x(), 0));
-					velocity = math::vector2d(0, velocity.y());
-					//velocity += math::vector2d(maxSpeed, 0);
+					velocity += math::vector2d(w->location().x() - location().x(), 0);
+					//move(math::vector2d(maxSpeed, 0));
 				}
 				break;
 			}
@@ -195,67 +186,12 @@ void pig::handleCollision(delta_time dt) {
 				distance = std::sqrt(toVectorLength);
 				const double overlap = (this->radius() + ptr->radius()) - distance;
 				auto handleVector = toVector / distance * overlap;
-				//velocity += normalize(handleVector) * maxSpeed;
-				//velocity += handleVector / mass * to_seconds(dt);
-				move(handleVector);
+				//move(normalize(handleVector)*maxSpeed*to_seconds(dt));
+				//heading_ = normalize(handleVector);
+				velocity += handleVector;
 			}
-		} 
-	}
-}
-
-math::vector2d pig::getCollisionVector()
-{
-	auto collisionVector = math::vector2d(0, 0);
-	for (auto i = begin_collision();i != end_collision(); ++i) {
-		actor *ptr = &(*i);
-		auto toVector = location() - ptr->location();
-
-		if (dynamic_cast<boat*>(ptr)) {
-			caught_ = true;
-		}
-
-		else if (const auto w = dynamic_cast<wall*>(ptr);w) {
-			switch (w->getFace())
-			{
-			case wall::NORTH:
-				if (location().y() > w->location().y())
-				{
-					//velocity += (math::vector2d(0,w->location().y() - location().y())/mass)*to_seconds(dt);
-					//move(math::vector2d(0, w->location().y() - location().y()));
-					//velocity += math::vector2d(0, -1*maxSpeed);
-					collisionVector += math::vector2d(0, w->location().x() - location().x());
-				}
-				break;
-			case wall::SOUTH:
-				if (location().y() < w->location().y())
-				{
-					//velocity += math::vector2d(0, w->location().y() - location().y())/mass*to_seconds(dt);
-					//move(math::vector2d(0, w->location().y() - location().y()));
-					//velocity += math::vector2d(0, maxSpeed);
-					collisionVector += math::vector2d(0,w->location().x() - location().x());
-				}
-				break;
-			case wall::WEST:
-				if (location().x() > w->location().x())
-				{
-					//velocity += math::vector2d(w->location().x()-location().x(), 0) / mass * to_seconds(dt);
-					//move(math::vector2d(w->location().x() - location().x(), 0));
-					//velocity += math::vector2d(-1 * maxSpeed, 0);
-					collisionVector += math::vector2d(w->location().x() - location().x(), 0);
-				}
-				break;
-			case wall::EAST:
-				if (location().x() < w->location().x())
-				{
-					//velocity += math::vector2d(w->location().x() - location().x(), 0) / mass * to_seconds(dt);
-					//move(math::vector2d(w->location().x() - location().x(), 0));
-					//velocity += math::vector2d(maxSpeed, 0);
-					collisionVector += math::vector2d(w->location().x() - location().x(), 0);
-				}
-				break;
-			}
-		}
-		else if (dynamic_cast<island*>(ptr)) {
+		}/* else
+		{
 			const auto & k = num_colliding_actors();
 			double distance = 0;
 			const auto & toVectorLength = toVector.x() * toVector.x() + toVector.y() * toVector.y();
@@ -263,15 +199,13 @@ math::vector2d pig::getCollisionVector()
 				distance = std::sqrt(toVectorLength);
 				const double overlap = (this->radius() + ptr->radius()) - distance;
 				auto handleVector = toVector / distance * overlap;
-				//velocity += normalize(handleVector) * maxSpeed;
-				//velocity += handleVector / mass * to_seconds(dt);
-				collisionVector+=handleVector;
+				//move(normalize(handleVector)*maxSpeed*to_seconds(dt));
+				//heading_ = normalize(handleVector);
+				velocity += handleVector;
 			}
-		}
+		}*/
 	}
-	return collisionVector;
 }
-
 
 void pig::revive()
 {
