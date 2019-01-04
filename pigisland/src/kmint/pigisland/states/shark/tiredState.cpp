@@ -16,7 +16,7 @@ tiredState::tiredState(shark & shark) :_shark(shark)
 void tiredState::act()
 {
 	if (_shark.node().node_id() == _shark.get_resting_place()->node_id()) {
-		if (_shark.get_energy() == 0) {
+		if (_shark.get_energy() == 0)
 			_shark.actorContainer()->newRound();
 			_shark.rest();
 		}
