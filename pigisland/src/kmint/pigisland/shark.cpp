@@ -22,6 +22,7 @@ namespace pigisland {
 	RegisterStates();
 	setState(WANDER_STATE);
 	_energy = 100;
+	playTime = from_seconds(0);
 }
 
 void shark::act(delta_time dt) {
@@ -31,9 +32,20 @@ void shark::act(delta_time dt) {
 		  setState(STATE_NAMES::TIRED_STATE);
 	  }
 	  currentState->act();
-    t_since_move_ = from_seconds(0);
+	  t_since_move_ = from_seconds(0);
+  }
+  if (swimming_)
+  {
+	  playTime += dt;
   }
 }
+
+void shark::rest()
+{
+	swimming_ = false;
+	playTime = from_seconds(0);
+}
+
 
 void shark::RegisterStates() {
 	States[shark::STATE_NAMES::FLEE_STATE] = std::make_unique<fleeState>(*this);

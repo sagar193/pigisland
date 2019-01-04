@@ -168,38 +168,45 @@ void ActorContainer::spawnNewPigs(int const pigsToSpawn)
 		}
 	}
 
-	std::cout << "a to shark " <<avgdna[pig::Forces::ATTRACTIONTOSHARK] / 100 << '\n';
-	std::cout << "a to boat "<<avgdna[pig::Forces::ATTRACTIONTOBOAT] / 100 << '\n';
-	std::cout << "wander "<< avgdna[pig::Forces::WANDER] / 100 << '\n';
-	std::cout << "cohesion " << avgdna[pig::Forces::COHESION] / 100 << '\n';
-	std::cout << "alignment " << avgdna[pig::Forces::ALIGNMENT] / 100 << '\n';
-	std::cout << "seperation " << avgdna[pig::Forces::SEPARATION] / 100 << '\n';
-	std::cout << '\n';
+	
 
 
 
 	std::vector<pig*> candidates;
-	//std::vector<float> cumulativeFitnis;
 	std::sort(pigVector.begin(), pigVector.end(), [](pig* pig1, pig* pig2) {return pig1->timeAlive() > pig2->timeAlive();});
-	float totalFitnis = 0;
+	float totalFitness = 0;
+	float maxFitness = 0;
 	for (auto p : pigVector)
 	{
-		if(candidates.size()<countCandidates)
+		totalFitness += to_seconds(p->timeAlive());
+		if (candidates.size() < countCandidates)
 		{
 			candidates.push_back(p);
-			totalFitnis += to_seconds(p->timeAlive());
+			maxFitness += to_seconds(p->timeAlive());
 			//cumulativeFitnis.push_back(to_seconds(p->timeAlive()) + last);
 		}
 	}
-	float totalFitnis2 = std::accumulate(candidates.begin(), candidates.end(), 0,[](float i, const pig* p) { return to_seconds(p->timeAlive()) + i; });
+
+	std::cout << "avg fitness " << (totalFitness/pigVector.size())/to_seconds(myShark->getPlayTime())<< '\n';
+	if(to_seconds(myShark->getPlayTime()) == 0)
+	{
+		int k = 0;
+	}
+	std::cout << "a to shark " << avgdna[pig::Forces::ATTRACTIONTOSHARK] / 100 << '\n';
+	std::cout << "a to boat " << avgdna[pig::Forces::ATTRACTIONTOBOAT] / 100 << '\n';
+	std::cout << "cohesion " << avgdna[pig::Forces::COHESION] / 100 << '\n';
+	std::cout << "alignment " << avgdna[pig::Forces::ALIGNMENT] / 100 << '\n';
+	std::cout << "separation " << avgdna[pig::Forces::SEPARATION] / 100 << '\n';
+	std::cout << '\n';
+
 
 
 	for (auto currentP : pigVector)
 	{
 		float last = to_seconds(candidates[candidates.size() - 1]->timeAlive());
-		const auto papachance = random_scalar(to_seconds(candidates[candidates.size()-1]->timeAlive()),totalFitnis);
+		const auto papachance = random_scalar(to_seconds(candidates[candidates.size()-1]->timeAlive()), maxFitness);
 		pig* papa = nullptr;
-		const auto mamachance = random_scalar(to_seconds(candidates[candidates.size()-1]->timeAlive()), totalFitnis);
+		const auto mamachance = random_scalar(to_seconds(candidates[candidates.size()-1]->timeAlive()), maxFitness);
 		pig* mama = nullptr;
 		for (auto p : candidates) {
 			if(papachance >=last && papachance <=(to_seconds(p->timeAlive())+last))

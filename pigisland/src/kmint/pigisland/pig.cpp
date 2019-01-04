@@ -47,7 +47,9 @@ pig::pig(math::vector2d location,
 void pig::act(delta_time dt) {
 	if (alive_) {
 		free_roaming_actor::act(dt);
-		timeAlive_ += dt;
+		if (shark_.swimming()) {
+			timeAlive_ += dt;
+		}
 		checkCollision(dt);
 		//Calculate forces
 		const auto& steering_force = steeringBehavior->CalculateForces(*this);
@@ -151,29 +153,35 @@ void pig::checkCollision(delta_time dt) {
 			case wall::NORTH:
 				if (location().y() > w->location().y())
 				{
-					velocity += math::vector2d(0,w->location().y() - location().y());
-					//move(math::vector2d(0, -1 * maxSpeed));
+					//velocity += math::normalize(math::vector2d(0,w->location().y() - location().y()))*maxSpeed;
+					move(math::vector2d(0, w->location().y() - location().y()));
+					velocity = math::vector2d(velocity.x(), 0);
+					
 				}
 				break;
 			case wall::SOUTH:
 				if (location().y() < w->location().y())
 				{
-					velocity += math::vector2d(0, w->location().y() - location().y());
-					//move(math::vector2d(0, maxSpeed));
+					//velocity += math::normalize(math::vector2d(0, w->location().y() - location().y()))*maxSpeed;
+					move(math::vector2d(0, w->location().y() - location().y()));
+					velocity = math::vector2d(velocity.x(), 0);
+
 				}
 				break;
 			case wall::WEST:
 				if (location().x() > w->location().x())
 				{
-					velocity += math::vector2d(w->location().x()-location().x(), 0);
-					//move(math::vector2d(-1 * maxSpeed, 0));
+					//velocity += math::normalize(math::vector2d(w->location().x()-location().x(), 0))*maxSpeed;
+					move(math::vector2d(w->location().x() - location().x(), 0));
+					velocity = math::vector2d(0, velocity.y());
 				}
 				break;
 			case wall::EAST:
 				if (location().x() < w->location().x())
 				{
-					velocity += math::vector2d(w->location().x() - location().x(), 0);
-					//move(math::vector2d(maxSpeed, 0));
+					//velocity += math::normalize(math::vector2d(w->location().x() - location().x(), 0))*maxSpeed;
+					move(math::vector2d(w->location().x() - location().x(), 0));
+					velocity = math::vector2d(0, velocity.y());
 				}
 				break;
 			}
@@ -185,12 +193,11 @@ void pig::checkCollision(delta_time dt) {
 			if (toVectorLength > 0) {
 				distance = std::sqrt(toVectorLength);
 				const double overlap = (this->radius() + ptr->radius()) - distance;
-				auto handleVector = toVector / distance * overlap;
-				//move(normalize(handleVector)*maxSpeed*to_seconds(dt));
-				//heading_ = normalize(handleVector);
-				velocity += handleVector;
+				const auto handleVector = toVector / distance * overlap;
+				move(handleVector);
+				//velocity += math::normalize(handleVector) * maxSpeed;
 			}
-		}/* else
+		} else
 		{
 			const auto & k = num_colliding_actors();
 			double distance = 0;
@@ -198,12 +205,10 @@ void pig::checkCollision(delta_time dt) {
 			if (toVectorLength > 0) {
 				distance = std::sqrt(toVectorLength);
 				const double overlap = (this->radius() + ptr->radius()) - distance;
-				auto handleVector = toVector / distance * overlap;
-				//move(normalize(handleVector)*maxSpeed*to_seconds(dt));
-				//heading_ = normalize(handleVector);
-				velocity += handleVector;
+				const auto handleVector = toVector / distance * overlap;
+				move(handleVector);
 			}
-		}*/
+		}
 	}
 }
 

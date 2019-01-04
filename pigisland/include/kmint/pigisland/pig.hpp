@@ -35,7 +35,7 @@ enum Forces{
   bool perceptive() const override { return !caught_; }
   bool perceivable() const override { return !caught_; }
   bool must_draw() const override { return !caught_; }
-  scalar range_of_perception() const override { return 50.0f; }
+  scalar range_of_perception() const override { return 100.0f; }
   scalar radius() const override { return 8.0f; }
   bool incorporeal() const override { return caught_; }
   math::vector2d heading() const override { return heading_; }

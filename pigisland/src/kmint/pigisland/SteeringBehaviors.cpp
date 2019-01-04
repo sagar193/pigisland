@@ -47,6 +47,7 @@ namespace kmint {
 			totalForce += CalculateCohesion(pig,others)*dna[pig::Forces::COHESION];
 			totalForce += CalculateSeparation(pig, others)*dna[pig::Forces::SEPARATION];
 			totalForce += CalculateAlignment(pig,others)*dna[pig::Forces::ALIGNMENT];
+			totalForce += CalculateIslandAvoidance(pig,islands);
 			return totalForce;
 		}
 

@@ -33,7 +33,14 @@ public:
 
   void setState(STATE_NAMES state);
   ActorContainer* actorContainer() { return &_actorContainer; }
+  delta_time getPlayTime() const { return playTime; }
+  bool swimming() const { return swimming_; }
+  void rest();
+  void wakeUp() { swimming_ = true; }
+
 private:
+  delta_time playTime;
+  bool swimming_ = true;
   play::image_drawable drawable_;
   map::map_graph *map_;
   map::map_node const *resting_place_;
