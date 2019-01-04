@@ -24,14 +24,13 @@ private:
 	int countCandidates = 50;
 	std::vector<pig*> pigVector;
 	std::vector<island*> islands;
-	time startTime;
+
 	kmint::map::map_graph &_g;
 	play::stage& _s;
 	shark* myShark;
 	boat* myBoat;
 	void spawnPigs();
 
-	int const spawnOldPigs();
 	void spawnNewPigs(int const pigsToSpawn);
 	std::vector<pig*> getAllAlive() const;
 	void createInitWalls();

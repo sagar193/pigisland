@@ -44,7 +44,7 @@ enum Forces{
 
   map::map_node* const getClosestNode() const;
 
-  const std::vector<const pig*> getNeighbours();
+
 
   shark* getShark() const { return &shark_; }
   boat* getBoat() const { return &boat_; }

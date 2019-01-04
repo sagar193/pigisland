@@ -1,7 +1,5 @@
 #include "..\..\..\..\..\include\kmint\pigisland\states\shark\tiredState.hpp"
 #include <map>
-#include <algorithm>
-#include "kmint/random.hpp"
 #include "kmint/map/map.hpp"
 #include "kmint/play.hpp"
 #include "kmint/pigisland/shark.hpp"
@@ -16,7 +14,7 @@ tiredState::tiredState(shark & shark) :_shark(shark)
 void tiredState::act()
 {
 	if (_shark.node().node_id() == _shark.get_resting_place()->node_id()) {
-		if (_shark.get_energy() == 0)
+		if (_shark.get_energy() == 0){
 			_shark.actorContainer()->newRound();
 			_shark.rest();
 		}

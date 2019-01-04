@@ -3,15 +3,11 @@
 #include "kmint/pigisland/resources.hpp"
 #include "kmint/random.hpp"
 #include <cmath>
-#include "kmint/pigisland/node_algorithm.hpp"
-
 #include "kmint/pigisland/boat.hpp"
 #include "kmint/pigisland/shark.hpp"
 #include "kmint/pigisland/SteeringBehaviors.hpp"
-#include <iostream>
-#include <vector>
 #include "kmint/pigisland/wall.hpp"
-#include "kmint/pigisland/island.hpp"
+
 
 namespace kmint {
 namespace pigisland {
@@ -121,21 +117,7 @@ double pig::calculateDistance(const kmint::map::map_node& mapNode) const {
 	return sqrt(pow(location().x() - mapNode.location().x(), 2) + pow(location().y() - mapNode.location().y(), 2));
 }
 
-const std::vector<const pig*> pig::getNeighbours() {
-	std::vector<const pig*> neighbours;
-	for (auto i = begin_perceived(); i != end_perceived(); ++i) {
-		actor *ptr = &(*i);
-		if (auto p = dynamic_cast<pig*>(ptr); p) {
-			//auto& distance = this->location() - p->location();
-			//const auto& dot = kmint::math::dot(heading, kmint::math::normalize(distance));
-			//if(dot>=0)
-			//{
-				neighbours.push_back(p);
-			//}
-		}
-	}
-	return neighbours;
-}
+
 
 void pig::checkCollision(delta_time dt) {
 	for (auto i = begin_collision();i != end_collision(); ++i) {
@@ -186,18 +168,7 @@ void pig::checkCollision(delta_time dt) {
 				break;
 			}
 		}
-		else if (dynamic_cast<island*>(ptr)){
-			const auto & k = num_colliding_actors();
-			double distance = 0;
-			const auto & toVectorLength = toVector.x() * toVector.x() + toVector.y() * toVector.y();
-			if (toVectorLength > 0) {
-				distance = std::sqrt(toVectorLength);
-				const double overlap = (this->radius() + ptr->radius()) - distance;
-				const auto handleVector = toVector / distance * overlap;
-				move(handleVector);
-				//velocity += math::normalize(handleVector) * maxSpeed;
-			}
-		} else
+		else
 		{
 			const auto & k = num_colliding_actors();
 			double distance = 0;

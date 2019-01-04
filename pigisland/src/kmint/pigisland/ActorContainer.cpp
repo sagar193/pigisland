@@ -3,8 +3,6 @@
 #include "kmint/pigisland/island.hpp"
 #include "kmint/pigisland/wall.hpp"
 #include <algorithm>
-#include <numeric>
-#include <cmath>
 #include <iostream>
 
 
@@ -26,9 +24,6 @@ ActorContainer::ActorContainer(kmint::map::map_graph &g, play::stage& s/*,map::m
 		pigVector.push_back(&(_s.build_actor<pigisland::pig>(islands[location]->location(), 
 			random_scalar(0, 1), random_scalar(0, 1), random_scalar(0, 1), random_scalar(0, .005), random_scalar(-1, 1), random_scalar(-1, 1), _g, *myShark, *myBoat)));
 	}
-
-
-	startTime = now();
 }
 
 void ActorContainer::createInitWalls() 
@@ -86,21 +81,6 @@ void ActorContainer::addPigReference(pig* newPig)
 	pigVector.push_back(newPig);
 }
 
-int const ActorContainer::spawnOldPigs()
-{
-	int spawnLeft = 100;
-	for each (auto pigs in pigVector)
-	{
-		if (pigs->alive())
-			continue;
-		else {
-			//pigs->revive();
-			spawnLeft -= 1;
-		}
-	}
-
-	return spawnLeft;
-}
 
 bool ActorContainer::sortHelper(pig* pig1,pig* pig2)
 {
@@ -111,8 +91,6 @@ bool ActorContainer::sortHelper(pig* pig1,pig* pig2)
 
 void ActorContainer::spawnNewPigs(int const pigsToSpawn)
 {	
-	auto endTime = now() - startTime;
-
 
 	std::map<pig::Forces, double> avgdna;
 
@@ -122,10 +100,6 @@ void ActorContainer::spawnNewPigs(int const pigsToSpawn)
 	avgdna[pig::Forces::COHESION] = 0;
 	avgdna[pig::Forces::ALIGNMENT] = 0;
 	avgdna[pig::Forces::SEPARATION] = 0;
-
-
-
-
 
 	for(auto& p:pigVector)
 	{
@@ -168,9 +142,6 @@ void ActorContainer::spawnNewPigs(int const pigsToSpawn)
 		}
 	}
 
-	
-
-
 
 	std::vector<pig*> candidates;
 	std::sort(pigVector.begin(), pigVector.end(), [](pig* pig1, pig* pig2) {return pig1->timeAlive() > pig2->timeAlive();});
@@ -198,8 +169,6 @@ void ActorContainer::spawnNewPigs(int const pigsToSpawn)
 	std::cout << "alignment " << avgdna[pig::Forces::ALIGNMENT] / 100 << '\n';
 	std::cout << "separation " << avgdna[pig::Forces::SEPARATION] / 100 << '\n';
 	std::cout << '\n';
-
-
 
 	for (auto currentP : pigVector)
 	{
@@ -232,7 +201,7 @@ void ActorContainer::spawnNewPigs(int const pigsToSpawn)
 	{
 		currentP->revive();
 	}
-	startTime = now();
+
 	
 }
 
